@@ -1,0 +1,4 @@
+{"schema":"course-log-v1","id":"11444c2d-30b1-4646-9c2d-4cc213ab70df","timestamp":"2026-09-26T09:17:56.825Z","session":"6deb6864-dc43-41d5-a033-293f6b09235b","type":"session_start","actor":"system","source":"vscode"}
+{"schema":"course-log-v1","id":"1849e813-64b2-4df1-90c5-28a0a9791065","timestamp":"2026-09-26T09:17:56.826Z","session":"6deb6864-dc43-41d5-a033-293f6b09235b","type":"file_open","actor":"unknown","source":"vscode","file":"README.md","language":"markdown"}
+{"schema":"course-log-v1","id":"7b81e333-92a1-4097-9c26-62f999516470","timestamp":"2026-09-26T09:18:41.426Z","session":"6deb6864-dc43-41d5-a033-293f6b09235b","type":"file_edit","actor":"unknown","source":"vscode","file":"README.md","language":"markdown"}
+{"schema":"course-log-v1","id":"18671710-7cf2-486c-a306-e9403c0537c7","timestamp":"2026-09-26T15:32:16.472Z","session":"6deb6864-dc43-41d5-a033-293f6b09235b","type":"session_end","actor":"system","source":"vscode","reason":"workspace_closed"}

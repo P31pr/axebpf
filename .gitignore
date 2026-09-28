@@ -1,3 +1,8 @@
+# Cargo build output and standalone lockfile
+# AxVisor manages dependencies with its workspace-root Cargo.lock.
+/target/
+/Cargo.lock
+
 # >>> course-tool records
 !/.ai/
 !/.ai/.gitignore

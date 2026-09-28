@@ -1,0 +1,2 @@
+{"schema":"course-log-v1","id":"ea59e84a-df1d-410d-8439-bb79700da073","timestamp":"2026-09-27T07:03:47.480Z","session":"b964dfc2-fea8-46f2-ae8b-11b59eadd352","type":"session_start","actor":"system","source":"vscode"}
+{"schema":"course-log-v1","id":"b0bf7bd0-41b7-4089-8e85-4da362e320e7","timestamp":"2026-09-27T07:03:47.481Z","session":"b964dfc2-fea8-46f2-ae8b-11b59eadd352","type":"file_open","actor":"unknown","source":"vscode","file":"README.md","language":"markdown"}
