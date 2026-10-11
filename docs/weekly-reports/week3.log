@@ -1,0 +1,498 @@
+axvisor:/$ vm start 1
+[ 35.373775 1:15 axvm::vm::machine::running:64] vCPU CPU(1) on CPU(1) ready, waiting for running...
+[ 35.373820 2:2 axvm::arch::vm::inited:40] VM 1 (linux-qemu) main cpu started.
+Running
+[ 35.374161 1:15 axvm::vm::machine::running:70] VCpu CPU Hard(0x1) on CPU(1) run
+✓ VM[1] started successfully
+[ 35.374292 1:15 axvm::arch::cpu:132] Starting vCPU CPU(1)
+[ 35.374409 2:2 axebpf::tracepoints::stats:19] Found attached program 'file' (id=0) for 'shell:shell_command'
+[ 35.374836 2:2 axebpf::output:33] [eBPF] prog=file tp=shell:shell_command count=11 ts_ns=35374834064
+axvisor:/$ [ 35.376146 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1 sampled=false x0=0x1 x1=0x42c3adf8 x2=0x0 x3=0x1
+[ 35.377362 1:15 axebpf::probe::kprobe::manager:188] guest_kprobe: registered vm1:0xffff8000803526cc (mode=BrkInject, prog=0)
+[ 35.377671 1:15 axebpf::probe::kprobe::manager:674] guest_kprobe: deferred hidden enable vm1:0xffff8000803526cc until TTBR1_EL1 is ready
+[ 35.377995 1:15 axebpf::probe::kprobe::manager:188] guest_kprobe: registered vm1:0xffff800080352724 (mode=BrkInject, prog=0)
+[ 35.378274 1:15 axebpf::probe::kprobe::manager:674] guest_kprobe: deferred hidden enable vm1:0xffff800080352724 until TTBR1_EL1 is ready
+[ 35.378627 1:15 axebpf::probe::kprobe::manager:188] guest_kprobe: registered vm1:0xffff800080281ac0 (mode=BrkInject, prog=0)
+[ 35.378908 1:15 axebpf::probe::kprobe::manager:674] guest_kprobe: deferred hidden enable vm1:0xffff800080281ac0 until TTBR1_EL1 is ready
+[ 35.379313 1:15 axebpf::probe::kprobe::manager:188] guest_kprobe: registered vm1:0xffff800080160b24 (mode=BrkInject, prog=0)
+[ 35.379912 1:15 axebpf::probe::kprobe::manager:674] guest_kprobe: deferred hidden enable vm1:0xffff800080160b24 until TTBR1_EL1 is ready
+[ 35.380693 1:15 axebpf::probe::kprobe::manager:188] guest_kprobe: registered vm1:0xffff8000802afe6c (mode=BrkInject, prog=0)
+[ 35.380949 1:15 axebpf::probe::kprobe::manager:674] guest_kprobe: deferred hidden enable vm1:0xffff8000802afe6c until TTBR1_EL1 is ready
+[ 35.381289 1:15 axvisor::vmm:60] guest_uprobe_observer: registered 5 hidden runtime observer probe(s) for vm1
+[ 35.381771 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1 sampled=false retval=0x0
+[ 35.417165 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=2 sampled=false x0=0x1 x1=0x42c39700 x2=0x0 x3=0x0
+[ 35.418103 1:15 axebpf::probe::kprobe::manager:288] guest_kprobe: BRK patch vm1:0xffff800080010200 hva=0x47610200 gpa=0x47600000 barrier_size=0x200000 saved_insn=0xd503233f
+[ 35.418380 1:15 axebpf::probe::kprobe::manager:297] guest_kprobe: enabling BRK inject mode for vm1:0xffff800080010200
+[ 35.418647 1:15 axebpf::probe::kprobe::manager:411] guest_kprobe: auto-enabled deferred probe vm1:0xffff800080010200
+[ 35.418882 1:15 axebpf::probe::kprobe::manager:288] guest_kprobe: BRK patch vm1:0xffff8000800c6768 hva=0x476c6768 gpa=0x47600000 barrier_size=0x200000 saved_insn=0xd503233f
+[ 35.419226 1:15 axebpf::probe::kprobe::manager:297] guest_kprobe: enabling BRK inject mode for vm1:0xffff8000800c6768
+[ 35.419466 1:15 axebpf::probe::kprobe::manager:411] guest_kprobe: auto-enabled deferred probe vm1:0xffff8000800c6768
+[ 35.419739 1:15 axebpf::probe::kprobe::manager:288] guest_kprobe: BRK patch vm1:0xffff800080160b24 hva=0x47760b24 gpa=0x47600000 barrier_size=0x200000 saved_insn=0xd503233f
+[ 35.420373 1:15 axebpf::probe::kprobe::manager:297] guest_kprobe: enabling BRK inject mode for vm1:0xffff800080160b24
+[ 35.420697 1:15 axebpf::probe::kprobe::manager:411] guest_kprobe: auto-enabled deferred probe vm1:0xffff800080160b24
+[ 35.420909 1:15 axebpf::probe::kprobe::manager:288] guest_kprobe: BRK patch vm1:0xffff800080281ac0 hva=0x47881ac0 gpa=0x47800000 barrier_size=0x200000 saved_insn=0xd503233f
+[ 35.421133 1:15 axebpf::probe::kprobe::manager:297] guest_kprobe: enabling BRK inject mode for vm1:0xffff800080281ac0
+[ 35.421354 1:15 axebpf::probe::kprobe::manager:411] guest_kprobe: auto-enabled deferred probe vm1:0xffff800080281ac0
+[ 35.421556 1:15 axebpf::probe::kprobe::manager:288] guest_kprobe: BRK patch vm1:0xffff8000802afe6c hva=0x478afe6c gpa=0x47800000 barrier_size=0x200000 saved_insn=0xd503233f
+[ 35.421830 1:15 axebpf::probe::kprobe::manager:297] guest_kprobe: enabling BRK inject mode for vm1:0xffff8000802afe6c
+[ 35.422004 1:15 axebpf::probe::kprobe::manager:411] guest_kprobe: auto-enabled deferred probe vm1:0xffff8000802afe6c
+[ 35.422193 1:15 axebpf::probe::kprobe::manager:288] guest_kprobe: BRK patch vm1:0xffff8000803526cc hva=0x479526cc gpa=0x47800000 barrier_size=0x200000 saved_insn=0xd503233f
+[ 35.422427 1:15 axebpf::probe::kprobe::manager:297] guest_kprobe: enabling BRK inject mode for vm1:0xffff8000803526cc
+[ 35.422601 1:15 axebpf::probe::kprobe::manager:411] guest_kprobe: auto-enabled deferred probe vm1:0xffff8000803526cc
+[ 35.422790 1:15 axebpf::probe::kprobe::manager:288] guest_kprobe: BRK patch vm1:0xffff800080352724 hva=0x47952724 gpa=0x47800000 barrier_size=0x200000 saved_insn=0xd503233f
+[ 35.423049 1:15 axebpf::probe::kprobe::manager:297] guest_kprobe: enabling BRK inject mode for vm1:0xffff800080352724
+[ 35.423204 1:15 axebpf::probe::kprobe::manager:411] guest_kprobe: auto-enabled deferred probe vm1:0xffff800080352724
+[ 35.423489 1:15 axvisor::vmm:52] guest_kprobe: auto-enabled 7 deferred probe(s) for vm1 after VM-exit
+[ 35.423802 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=2 sampled=false retval=0x45b33790
+[ 35.424515 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=3 sampled=false x0=0x1 x1=0x42c39700 x2=0x0 x3=0x0
+[ 35.424874 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=3 sampled=false retval=0x45b33790
+[ 35.425378 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=4 sampled=false x0=0x1 x1=0x42c39700 x2=0x0 x3=0x0
+[ 35.425748 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=4 sampled=false retval=0x45b33790
+[ 35.426264 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=5 sampled=false x0=0x1 x1=0x42c39700 x2=0x0 x3=0x0
+[ 35.426695 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=5 sampled=false retval=0x45b33790
+[ 35.427272 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=6 sampled=false x0=0x1 x1=0x42c39700 x2=0x0 x3=0x0
+[ 35.428017 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=6 sampled=false retval=0x45b33790
+[ 35.428525 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=7 sampled=false x0=0x1 x1=0x42c39700 x2=0x0 x3=0x0
+[ 35.428789 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=7 sampled=false retval=0x45b33790
+[ 35.429421 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=8 sampled=false x0=0x1 x1=0x42c39700 x2=0x0 x3=0x0
+[ 35.430006 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=8 sampled=false retval=0x45b33790
+[ 35.483297 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=1
+[ 35.490718 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=2
+[ 35.501177 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=4
+[ 35.521150 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=8
+[ 35.566375 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=16
+[ 35.644684 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=32
+[    0.000000] Booting Linux on physical CPU 0x0000000001 [0x410fd083]
+[    0.000000] Linux version 6.18.0-rc6-gfd95357fd8c6-dirty (runner@s1lqc) (aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #25 SMP PREEMPT Fri Mar 20 11:22:05 CST 2026
+[    0.000000] KASLR disabled on command line
+[    0.000000] random: crng init done
+[    0.000000] Machine model: linux,dummy-virt
+[    0.000000] efi: UEFI not found.
+[    0.000000] OF: reserved mem: Reserved memory: No reserved-memory node in the DT
+[    0.000000] NUMA: Faking a node at [mem 0x0000000047400000-0x00000000573fffff]
+[    0.000000] NODE_DATA(0) allocated [mem 0x5737d580-0x5737fbff]
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000047400000-0x00000000573fffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000047400000-0x00000000573fffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000047400000-0x00000000573fffff]
+[    0.000000] On node 0, zone DMA: 29696 pages in unavailable ranges
+[    0.000000] On node 0, zone DMA: 3072 pages in unavailable ranges
+[    0.000000] cma: Reserved 32 MiB at 0x0000000054c00000
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 25 pages/cpu s62488 r8192 d31720 u102400
+[    0.000000] Detected PIPT I-cache on CPU0
+[    0.000000] CPU features: detected: GICv3 CPU interface
+[    0.000000] CPU features: detected: Spectre-v2
+[    0.000000] CPU features: detected: Spectre-v3a
+[    0.000000] CPU features: detected: Spectre-v4
+[    0.000000] CPU features: detected: Spectre-BHB
+[    0.000000] CPU features: detected: ARM erratum 1742098
+[    0.000000] CPU features: detected: ARM errata 1165522, 1319367, or 1530923
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: root=/dev/vda rw init=/init nokaslr
+[    0.000000] printk: log buffer data + meta data: 131072 + 458752 = 589824 bytes
+[    0.000000] Dentry cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 0MB
+[    0.000000] software IO TLB: area num 1.
+[    0.000000] software IO TLB: mapped [mem 0x00000000572ae000-0x00000000572ee000] (0MB)
+[    0.000000] Fallback order for Node 0: 0 
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 65536
+[    0.000000] Policy zone: DMA
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000] rcu:     RCU event tracing is enabled.
+[    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=512 to nr_cpu_ids=1.
+[    0.000000]  Trampoline variant of Tasks RCU enabled.
+[    0.000000]  Tracing variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[    0.000000] RCU Tasks: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=1.
+[    0.000000] RCU Tasks Trace: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=1.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: 256 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Root IRQ handler: gic_handle_irq
+[    0.000000] GICv3: GICv3 features: 16 PPIs
+[    0.000000] GICv3: GICD_CTLR.DS=1, SCR_EL3.FIQ=0
+[    0.000000] GICv3: CPU0: found redistributor 1 region 0:0x00000000080c0000
+[    0.000000] ITS [mem 0x08080000-0x0809ffff]
+[    0.000000] ITS@0x0000000008080000: allocated 8192 Devices @4a840000 (indirect, esz 8, psz 64K, shr 1)
+[    0.000000] ITS@0x0000000008080000: allocated 8192 Interrupt Collections @4a850000 (flat, esz 8, psz 64K, shr 1)
+[    0.000000] GICv3: using LPI property table @0x000000004a860000
+[    0.000000] GICv3: CPU0: using allocated LPI pending table @0x000000004a870000
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] arch_timer: cp15 timer running at 62.50MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0x1ffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+[    0.000060] sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
+[    0.009913] Console: colour dummy device 80x25
+[    0.010316] printk: legacy console [tty0] enabled
+[    0.015731] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=250000)
+[    0.015938] pid_max: default: 32768 minimum: 301
+[    0.017589] LSM: initializing lsm=capability
+[    0.020052] Mount-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.020117] Mountpoint-cache hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.045077] /cpus/cpu-map/socket0/cluster0/core0: Can't get CPU for leaf core
+[    0.045957] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    0.058980] rcu: Hierarchical SRCU implementation.
+[    0.059099] rcu:     Max phase no-delay instances is 1000.
+[    0.061401] fsl-mc MSI: its@8080000 domain created
+[    0.062448] EFI services will not be available.
+[    0.064156] smp: Bringing up secondary CPUs ...
+[    0.064734] smp: Brought up 1 node, 1 CPU
+[    0.064764] SMP: Total of 1 processors activated.
+[    0.064795] CPU: All CPU(s) started at EL1
+[    0.064963] CPU features: detected: 32-bit EL0 Support
+[    0.064981] CPU features: detected: 32-bit EL1 Support
+[    0.065028] CPU features: detected: CRC32 instructions
+[    0.065147] CPU features: detected: PMUv3
+[    0.076000] alternatives: applying system-wide alternatives
+[    0.097031] Memory: 171208K/262144K available (17920K kernel code, 5422K rwdata, 12940K rodata, 11648K init, 690K bss, 56388K reserved, 32768K cma-reserved)
+[    0.121240] devtmpfs: initialized
+[    0.143095] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.143667] posixtimers hash table entries: 512 (order: 1, 8192 bytes, linear)
+[    0.143907] futex hash table entries: 256 (16384 bytes on 1 NUMA nodes, total 16 KiB, linear).
+[    0.145709] 20544 pages in range for non-PLT usage
+[    0.145754] 512064 pages in range for PLT usage
+[    0.149867] pinctrl core: initialized pinctrl subsystem
+[    0.159149] DMI not present or invalid.
+[    0.183647] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.194224] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+[    0.195847] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.196105] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.196334] audit: initializing netlink subsys (disabled)
+[    0.197772] audit: type=2000 audit(0.152:1): state=initialized audit_enabled=0 res=1
+[    0.202069] thermal_sys: Registered thermal governor 'step_wise'
+[    0.202104] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.202403] cpuidle: using governor menu
+[    0.203333] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.206495] ASID allocator initialised with 65536 entries
+[    0.210367] Serial: AMBA PL011 UART driver
+[    0.259139] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
+[    0.261854] printk: console [ttyAMA0] enabled
+[ 35.797152 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=64
+[    0.317453] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.319685] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.320543] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[    0.321409] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[    0.322082] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.323253] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.325170] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[    0.326164] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[    0.340934] ACPI: Interpreter disabled.
+[    0.347401] iommu: Default domain type: Translated
+[    0.348437] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.351241] SCSI subsystem initialized
+[    0.357400] usbcore: registered new interface driver usbfs
+[    0.358700] usbcore: registered new interface driver hub
+[    0.360442] usbcore: registered new device driver usb
+[    0.363020] pps_core: LinuxPPS API ver. 1 registered
+[    0.363895] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.365368] PTP clock support registered
+[    0.366563] EDAC MC: Ver: 3.0.0
+[    0.368896] scmi_core: SCMI protocol bus registered
+[    0.372755] FPGA manager framework
+[    0.384903] vgaarb: loaded
+[    0.387519] clocksource: Switched to clocksource arch_sys_counter
+[    0.391159] VFS: Disk quotas dquot_6.6.0
+[    0.393056] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.396080] pnp: PnP ACPI: disabled
+[    0.416728] NET: Registered PF_INET protocol family
+[ 35.898919 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=256 sampled=true x0=0x1 x1=0x42c39700 x2=0x0 x3=0x47600000
+[ 35.899335 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=256 sampled=true retval=0x45b33790
+[    0.421812] IP idents hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.429396] tcp_listen_portaddr_hash hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.430705] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.433917] TCP established hash table entries: 2048 (order: 2, 16384 bytes, linear)
+[    0.436759] TCP bind hash table entries: 2048 (order: 4, 65536 bytes, linear)
+[    0.437901] TCP: Hash tables configured (established 2048 bind 2048)
+[    0.441129] UDP hash table entries: 256 (order: 2, 16384 bytes, linear)
+[ 35.922459 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=128
+[    0.443034] UDP-Lite hash table entries: 256 (order: 2, 16384 bytes, linear)
+[    0.446671] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.454350] RPC: Registered named UNIX socket transport module.
+[    0.460783] RPC: Registered udp transport module.
+[    0.461968] RPC: Registered tcp transport module.
+[    0.463006] RPC: Registered tcp-with-tls transport module.
+[    0.465134] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.466689] PCI: CLS 0 bytes, default 64
+[    0.473116] kvm [1]: HYP mode not available
+[    0.477796] Initialise system trusted keyrings
+[    0.481506] workingset: timestamp_bits=42 max_order=16 bucket_order=0
+[    0.485342] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.489216] NFS: Registering the id_resolver key type
+[    0.490461] Key type id_resolver registered
+[    0.492879] Key type id_legacy registered
+[    0.493850] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    0.494854] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[    0.497442] 9p: Installing v9fs 9p2000 file system support
+[    0.538422] Key type asymmetric registered
+[    0.540491] Asymmetric key parser 'x509' registered
+[    0.541775] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 244)
+[    0.542828] io scheduler mq-deadline registered
+[    0.544141] io scheduler kyber registered
+[    0.545520] io scheduler bfq registered
+[    0.581228] pl061_gpio 9030000.pl061: PL061 GPIO chip registered
+[    0.585730] ledtrig-cpu: registered to indicate activity on CPUs
+[    0.590032] pci-host-generic 4010000000.pcie: host bridge /pcie@10000000 ranges:
+[    0.592480] pci-host-generic 4010000000.pcie:       IO 0x003eff0000..0x003effffff -> 0x0000000000
+[    0.593782] pci-host-generic 4010000000.pcie:      MEM 0x0010000000..0x003efeffff -> 0x0010000000
+[    0.596321] pci-host-generic 4010000000.pcie:      MEM 0x8000000000..0xffffffffff -> 0x8000000000
+[    0.597902] pci-host-generic 4010000000.pcie: Memory resource size exceeds max for 32 bits
+[    0.600540] pci-host-generic 4010000000.pcie: ECAM at [mem 0x4010000000-0x401fffffff] for [bus 00-ff]
+[    0.604748] pci-host-generic 4010000000.pcie: PCI host bridge to bus 0000:00
+[    0.606870] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.608485] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+[    0.610152] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff]
+[    0.612042] pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff]
+[    0.615289] pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000 conventional PCI endpoint
+[    0.624472] pci 0000:00:01.0: [1af4:1000] type 00 class 0x020000 conventional PCI endpoint
+[    0.626278] pci 0000:00:01.0: BAR 0 [io  0x0000-0x001f]
+[    0.627149] pci 0000:00:01.0: BAR 1 [mem 0x10000000-0x10000fff]
+[    0.628621] pci 0000:00:01.0: BAR 4 [mem 0x8000000000-0x8000003fff 64bit pref]
+[    0.629542] pci 0000:00:01.0: ROM [mem 0x00000000-0x0007ffff pref]
+[    0.633315] pci 0000:00:01.0: ROM [mem 0x10000000-0x1007ffff pref]: assigned
+[    0.634467] pci 0000:00:01.0: BAR 4 [mem 0x8000000000-0x8000003fff 64bit pref]: assigned
+[    0.637321] pci 0000:00:01.0: BAR 1 [mem 0x10080000-0x10080fff]: assigned
+[    0.640516] pci 0000:00:01.0: BAR 0 [io  0x1000-0x101f]: assigned
+[    0.642294] pci_bus 0000:00: resource 4 [io  0x0000-0xffff]
+[    0.645719] pci_bus 0000:00: resource 5 [mem 0x10000000-0x3efeffff]
+[    0.646910] pci_bus 0000:00: resource 6 [mem 0x8000000000-0xffffffffff]
+[ 36.178471 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=512 sampled=true x0=0x1 x1=0x42c39700 x2=0x0 x3=0x47600000
+[ 36.179014 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=512 sampled=true retval=0x45b33790
+[    0.721312] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    0.734236] msm_serial: driver initialized
+[    0.736740] SuperH (H)SCI(F) driver initialized
+[    0.737933] STM32 USART driver initialized
+[ 36.222079 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=256
+[    0.766450] loop: module loaded
+[    0.768644] virtio_blk virtio0: 1/0/0 default/read/poll queues
+[    0.776592] virtio_blk virtio0: [vda] 524288 512-byte logical blocks (268 MB/256 MiB)
+[    0.803140] megasas: 07.734.00.00-rc1
+[    0.808946] physmap-flash 0.flash: physmap platform flash device: [mem 0x00000000-0x03ffffff]
+[    0.811489] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    0.813214] Intel/Sharp Extended Query Table at 0x0031
+[    0.814832] Using buffer write method
+[    0.819085] physmap-flash 0.flash: physmap platform flash device: [mem 0x04000000-0x07ffffff]
+[    0.824489] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    0.826025] Intel/Sharp Extended Query Table at 0x0031
+[    0.827708] Using buffer write method
+[    0.834127] Concatenating MTD devices:
+[    0.836663] (0): "0.flash"
+[    0.837925] (1): "0.flash"
+[    0.839147] into device "0.flash"
+[    0.871215] tun: Universal TUN/TAP device driver, 1.6
+[    0.893276] thunder_xcv, ver 1.0
+[    0.894901] thunder_bgx, ver 1.0
+[    0.897196] nicpf, ver 1.0
+[    0.901405] e1000: Intel(R) PRO/1000 Network Driver
+[    0.902674] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    0.905945] e1000e: Intel(R) PRO/1000 Network Driver
+[    0.906866] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    0.909251] igb: Intel(R) Gigabit Ethernet Network Driver
+[    0.910365] igb: Copyright (c) 2007-2014 Intel Corporation.
+[    0.912304] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[    0.912897] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[    0.914243] sky2: driver version 1.30
+[    0.918080] VFIO - User Level meta-driver version: 0.3
+[    0.933752] usbcore: registered new interface driver usb-storage
+[    0.958149] rtc-pl031 9010000.pl031: registered as rtc0
+[    0.961434] rtc-pl031 9010000.pl031: setting system clock to 2026-10-11T16:52:24 UTC (1791737544)
+[    0.965764] i2c_dev: i2c /dev entries driver
+[    0.981432] sdhci: Secure Digital Host Controller Interface driver
+[    0.982395] sdhci: Copyright(c) Pierre Ossman
+[    0.984929] Synopsys Designware Multimedia Card Interface Driver
+[    0.986986] sdhci-pltfm: SDHCI platform and OF driver helper
+[    0.997013] usbcore: registered new interface driver usbhid
+[    0.998204] usbhid: USB HID core driver
+[    1.014549] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 (0,8000003f) counters available
+[ 36.502534 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=768 sampled=true x0=0x1 x1=0x42c39700 x2=0x0 x3=0x47600000
+[ 36.502986 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=768 sampled=true retval=0x45b33790
+[    1.025521] NET: Registered PF_PACKET protocol family
+[    1.028529] 9pnet: Installing 9P2000 support
+[    1.029842] Key type dns_resolver registered
+[    1.060606] registered taskstats version 1
+[    1.063232] Loading compiled-in X.509 certificates
+[    1.082014] Demotion targets for Node 0: null
+[    1.094329] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[    1.102487] clk: Disabling unused clocks
+[    1.104377] PM: genpd: Disabling unused power domains
+[    1.109920] check access for rdinit=/init failed: -2, ignoring
+[    1.202014] EXT4-fs (vda): recovery complete
+[    1.206421] EXT4-fs (vda): mounted filesystem 6d5dddfa-8b9b-4d62-aa46-002d3f7b47f4 r/w with ordered data mode. Quota mode: none.
+[    1.208120] VFS: Mounted root (ext4 filesystem) on device 254:0.
+[    1.209903] devtmpfs: mounted
+[ 36.758452 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1024 sampled=true x0=0x1 x1=0x42c39700 x2=0x0 x3=0x47600000
+[ 36.758910 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1024 sampled=true retval=0x45b33790
+[    1.322010] Freeing unused kernel memory: 11648K
+[    1.324614] Run /init as init process
+[ 36.804886 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kprobe vm1:gic_handle_irq hits=512
+[ 36.834510 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b650000 mm=0x4b650000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 36.836430 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b650000 mm=0x4b650000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 36.839543 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b650000 mm=0x4b650000 start=0x400000
+[ 36.840200 1:15 axebpf::probe::uprobe::linux_runtime_observer:442] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b650000 mm=0x4b650000 reason=no_exec_intent
+[ 36.841518 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b650000 mm=0x4b650000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.843062 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b650000 mm=0x4b650000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.844119 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b650000 mm=0x4b650000 start=0x618000
+[ 36.844538 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b650000 mm=0x4b650000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 36.882770 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kretprobe vm1:__arm64_sys_getpid hits=1
+[ 36.901974 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 36.904424 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 36.907667 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b693000 mm=0x4b693000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 36.908484 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b693000 mm=0x4b693000 start=0x400000
+[ 36.908994 1:15 axebpf::probe::uprobe::linux_runtime_observer:451] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b693000 mm=0x4b693000 reason=no_pending_path path=/bin/busybox
+[ 36.910000 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b693000 mm=0x4b693000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.911554 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b693000 mm=0x4b693000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.915638 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b693000 mm=0x4b693000 start=0x618000
+[ 36.916475 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b693000 mm=0x4b693000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 36.937019 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x398f0740 mm=0x4b693000
+[ 36.938572 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x398f0740 mm=0x4b693000
+[ 36.948687 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 36.951660 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6bc000 mm=0x4b6bc000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 36.952570 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x400000
+[ 36.952884 1:15 axebpf::probe::uprobe::linux_runtime_observer:451] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=no_pending_path path=/bin/busybox
+[ 36.953993 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6bc000 mm=0x4b6bc000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.955747 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6bc000 mm=0x4b6bc000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.956654 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x618000
+[ 36.956900 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 36.967528 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x1e9c4740 mm=0x4b6bc000
+[ 36.971251 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 36.972660 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6bc000 mm=0x4b6bc000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 36.973572 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x400000
+[ 36.973872 1:15 axebpf::probe::uprobe::linux_runtime_observer:451] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=no_pending_path path=/bin/busybox
+[ 36.975559 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x400000
+[ 36.975933 1:15 axebpf::probe::uprobe::linux_runtime_observer:420] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=no_mmap_intent
+[ 36.976867 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6bc000 mm=0x4b6bc000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.977805 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x618000
+[ 36.978307 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 36.980181 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x618000
+[ 36.980529 1:15 axebpf::probe::uprobe::linux_runtime_observer:420] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=no_mmap_intent
+[ 36.987606 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x353f7740 mm=0x4b6bc000
+[ 36.989447 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 36.991223 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 36.992806 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6bc000 mm=0x4b6bc000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 36.994906 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x400000
+[ 36.995282 1:15 axebpf::probe::uprobe::linux_runtime_observer:451] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=no_pending_path path=/bin/busybox
+[ 36.996032 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6bc000 mm=0x4b6bc000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 36.996957 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6bc000 mm=0x4b6bc000 start=0x618000
+[ 36.997250 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6bc000 mm=0x4b6bc000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 37.004067 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x1bb7f740 mm=0x4b6bc000
+[ 37.009221 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 37.012509 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 37.016174 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 37.017594 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x400000
+[ 37.017885 1:15 axebpf::probe::uprobe::linux_runtime_observer:451] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=no_pending_path path=/bin/busybox
+[ 37.019658 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x400000
+[ 37.019953 1:15 axebpf::probe::uprobe::linux_runtime_observer:420] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=no_mmap_intent
+[ 37.020936 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 37.023310 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x618000
+[ 37.024000 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 37.031897 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x3bca740 mm=0x4b696000
+[ 37.035041 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 37.036970 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 37.037657 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1280 sampled=true x0=0x1 x1=0x42c39700 x2=0x0 x3=0x47800000
+[ 37.038294 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1280 sampled=true retval=0x45b33790
+[ 37.039951 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x400000
+[ 37.040180 1:15 axebpf::probe::uprobe::linux_runtime_observer:451] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=no_pending_path path=/bin/busybox
+[ 37.040855 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 37.041845 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x618000
+[ 37.042130 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 37.044047 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x618000
+[ 37.044357 1:15 axebpf::probe::uprobe::linux_runtime_observer:420] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=no_mmap_intent
+[ 37.048377 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0xacee740 mm=0x4b696000
+[ 37.051624 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/sh
+[ 37.053307 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 37.055739 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 37.057251 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x400000
+[ 37.057737 1:15 axebpf::probe::uprobe::linux_runtime_observer:451] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=no_pending_path path=/bin/sh
+[ 37.059306 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x400000
+[ 37.059591 1:15 axebpf::probe::uprobe::linux_runtime_observer:420] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=no_mmap_intent
+[ 37.061024 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 37.064444 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b696000 mm=0x4b696000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 37.065814 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x618000
+[ 37.066460 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 37.071636 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b696000 mm=0x4b696000 start=0x618000
+[ 37.072603 1:15 axebpf::probe::uprobe::linux_runtime_observer:420] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b696000 mm=0x4b696000 reason=no_mmap_intent
+[ 37.077642 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kretprobe vm1:__arm64_sys_getpid hits=2
+axebpf_integration_demo wrapper: launch
+[ 37.092040 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x2b71740 mm=0x4b696000 path=/usr/bin/axebpf_integration_demo
+[ 37.095340 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x2b71740 mm=0x4b6b4000
+[ 37.096511 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6b4000 mm=0x4b6b4000 file_backed=true len=0x1000 prot=0x5 pgoff=0x0
+[ 37.097882 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6b4000 mm=0x4b6b4000 start=0x400000
+[ 37.098239 1:15 axebpf::probe::uprobe::linux_runtime_observer:460] guest_uprobe_observer_mmap_match: vm1 proc=0x4b6b4000 mm=0x4b6b4000 start=0x400000 len=0x1000 file_offset=0x0 path=/usr/bin/axebpf_integration_demo intent_proc=0x2b71740 intent_mm=0x4b696000
+[ 37.101143 1:15 axebpf::probe::uprobe::addr_translate:79] [AxErrorKind::BadState] invalid L0 descriptor
+[ 37.101388 1:15 axebpf::probe::uprobe::manager:1070] guest_uprobe: activate pending vm1:/usr/bin/axebpf_integration_demo+0x400160 failed: failed to translate user VA->GPA
+[ 37.101861 1:15 axebpf::probe::uprobe::addr_translate:79] [AxErrorKind::BadState] invalid L0 descriptor
+[ 37.102036 1:15 axebpf::probe::uprobe::manager:1070] guest_uprobe: activate pending vm1:/usr/bin/axebpf_integration_demo+0x400184 failed: failed to translate user VA->GPA
+[ 37.104345 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6b4000 mm=0x4b6b4000 file_backed=true len=0x1000 prot=0x3 pgoff=0xf
+[ 37.106642 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6b4000 mm=0x4b6b4000 start=0x41f000
+[ 37.106888 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6b4000 mm=0x4b6b4000 reason=non_exec_or_anon start=0x41f000 file_backed=true prot=0x3
+demo:start
+phase4:repeat_window begin
+phase1:userspace_fn begin
+phase1:userspace_fn end
+phase2:syscall_io begin
+[ 37.111667 1:15 axebpf::probe::kprobe::manager:443] guest_kprobe_hits: kretprobe vm1:__arm64_sys_getpid hits=4
+phase2:syscall_io end
+phase3:file_io begin
+phase3:file_io end
+[ 37.121781 1:15 axebpf::probe::uprobe::manager:1194] guest_uprobe: Stage-2 exec barrier armed vm1 gpa=0x49c00000 size=0x200000
+[ 37.122329 1:15 axebpf::probe::uprobe::manager:1134] guest_uprobe: BRK patch vm1:/usr/bin/axebpf_integration_demo runtime_pc=0x400160 hva=0x49d75160 saved_insn=0xf00000e2 patched_insn=0xd4200000
+[ 37.123542 1:15 axebpf::probe::uprobe::manager:1134] guest_uprobe: BRK patch vm1:/usr/bin/axebpf_integration_demo runtime_pc=0x400184 hva=0x49d75184 saved_insn=0xf00000e4 patched_insn=0xd4200000
+[ 37.124067 1:15 axebpf::probe::uprobe::linux_runtime_observer:627] guest_uprobe_activate: vm1 proc=0x4b6b4000 mm=0x4b6b4000count=2 reason=runtime_retry
+[ 37.357282 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1536 sampled=true x0=0x1 x1=0x42c39700 x2=0x0 x3=0x1
+[ 37.357681 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1536 sampled=true retval=0x45b33790
+phase1:userspace_fn begin
+[ 37.372788 1:15 axebpf::probe::uprobe::manager:1241] guest_uprobe: Stage-2 exec barrier released vm1 gpa=0x49c00000 size=0x200000 fault_gpa=0x49d75160
+[ 37.373924 1:15 axebpf::probe::uprobe::handler:228] guest_uprobe_hit: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_entry pc=0x400160 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 hits=1 prog_id=0
+[ 37.376037 1:15 axebpf::probe::uprobe::handler:228] guest_uprobe_hit: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_entry pc=0x400160 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 hits=2 prog_id=0
+[ 37.377540 1:15 axebpf::probe::uprobe::handler:311] guest_uretprobe_arm: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_compute entry_pc=0x400184 return_pc=0x400274 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 prog_id=0
+[ 37.379566 1:15 axebpf::probe::uprobe::handler:311] guest_uretprobe_arm: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_compute entry_pc=0x400184 return_pc=0x400274 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 prog_id=0
+[ 37.380721 1:15 axebpf::probe::uprobe::handler:383] guest_uretprobe_hit: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_compute entry_pc=0x400184 return_pc=0x400274 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 hits=1 prog_id=0
+phase1:userspace_fn end
+phase2:syscall_io begin
+phase2:syscall_io end
+phase3:file_io begin
+phase3:file_io end
+phase1:userspace_fn begin
+[ 37.588808 1:15 axebpf::probe::uprobe::handler:228] guest_uprobe_hit: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_entry pc=0x400160 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 hits=3 prog_id=0
+[ 37.589567 1:15 axebpf::probe::uprobe::handler:311] guest_uretprobe_arm: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_compute entry_pc=0x400184 return_pc=0x400274 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 prog_id=0
+[ 37.591160 1:15 axebpf::probe::uprobe::handler:311] guest_uretprobe_arm: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_compute entry_pc=0x400184 return_pc=0x400274 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 prog_id=0
+[ 37.592582 1:15 axebpf::probe::uprobe::handler:383] guest_uretprobe_hit: vm1 path=/usr/bin/axebpf_integration_demo symbol=demo_user_compute entry_pc=0x400184 return_pc=0x400274 mm=0x4b6b4000 pid=1265319936 tgid=1265319936 hits=2 prog_id=0
+phase1:userspace_fn end
+phase2:syscall_io begin
+phase2:syscall_io end
+phase3:file_io begin
+phase3:file_io end
+phase4:repeat_window end
+demo:done
+[ 38.806457 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x4b6b4000 mm=0x4b6b4000
+[ 38.809688 1:15 axebpf::probe::uprobe::manager:836] guest_uprobe_deactivate_mm: vm1 mm=0x4b6b4000 path=/usr/bin/axebpf_integration_demo symbol=demo_user_entry pc=0x400160
+[ 38.810747 1:15 axebpf::probe::uprobe::manager:836] guest_uprobe_deactivate_mm: vm1 mm=0x4b6b4000 path=/usr/bin/axebpf_integration_demo symbol=demo_user_compute pc=0x400184
+[ 38.817936 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x4b6b4000 mm=0x4b6b4000
+[ 38.825240 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x4b6b4000 mm=0x4b6b4000
+[ 38.829629 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x4b6b4000 mm=0x4b6b4000
+[ 38.832042 1:15 axebpf::probe::uprobe::linux_runtime_observer:660] guest_uprobe_observer_exit_mmap: vm1 proc=0x4b6b4000 mm=0x4b6b4000
+[ 38.848256 1:15 axebpf::probe::uprobe::linux_runtime_observer:362] guest_uprobe_observer_exec: vm1 symbol=__arm64_sys_execve proc=0x1d7de740 mm=0x4b650000 path=/bin/busybox
+[ 38.852063 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6c0000 mm=0x4b6c0000 file_backed=true len=0x20b000 prot=0x5 pgoff=0x0
+[ 38.853666 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6c0000 mm=0x4b6c0000 start=0x400000
+[ 38.854843 1:15 axebpf::probe::uprobe::linux_runtime_observer:460] guest_uprobe_observer_mmap_match: vm1 proc=0x4b6c0000 mm=0x4b6c0000 start=0x400000 len=0x20b000 file_offset=0x0 path=/usr/bin/axebpf_integration_demo intent_proc=0x2b71740 intent_mm=0x4b696000
+[ 38.856251 1:15 axebpf::probe::uprobe::addr_translate:79] [AxErrorKind::BadState] invalid L0 descriptor
+[ 38.856591 1:15 axebpf::probe::uprobe::manager:1070] guest_uprobe: activate pending vm1:/usr/bin/axebpf_integration_demo+0x400160 failed: failed to translate user VA->GPA
+[ 38.857209 1:15 axebpf::probe::uprobe::addr_translate:79] [AxErrorKind::BadState] invalid L0 descriptor
+[ 38.857506 1:15 axebpf::probe::uprobe::manager:1070] guest_uprobe: activate pending vm1:/usr/bin/axebpf_integration_demo+0x400184 failed: failed to translate user VA->GPA
+[ 38.860152 1:15 axebpf::probe::uprobe::linux_runtime_observer:557] guest_uprobe_observer_mmap_entry: vm1 proc=0x4b6c0000 mm=0x4b6c0000 file_backed=true len=0xa000 prot=0x3 pgoff=0x218
+[ 38.863672 1:15 axebpf::probe::uprobe::linux_runtime_observer:593] guest_uprobe_observer_mmap_return: vm1 proc=0x4b6c0000 mm=0x4b6c0000 start=0x618000
+[ 38.864194 1:15 axebpf::probe::uprobe::linux_runtime_observer:429] guest_uprobe_observer_mmap_return_skip: vm1 proc=0x4b6c0000 mm=0x4b6c0000 reason=non_exec_or_anon start=0x618000 file_backed=true prot=0x3
+[ 42.990864 1:15 axebpf::probe::hprobe::manager:448] [hprobe] ENTRY _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1792 sampled=true x0=0x1 x1=0x42c39700 x2=0x0 x3=0x47600000
+[ 42.991919 1:15 axebpf::probe::hprobe::manager:495] [hprobe] EXIT _RNvNtCsdQH8tYCRzGI_7axvisor3vmm19notify_guest_vmexit hit=1792 sampled=true retval=0x45b33790
+QEMU: Terminated
