@@ -1,0 +1,341 @@
+warning: patch for the non root package will be ignored, specify patch at the workspace root:
+package:   /home/shxx1/Anything/26Fall/axvisor-ebpf/modules/axvm/Cargo.toml
+workspace: /home/shxx1/Anything/26Fall/axvisor-ebpf/Cargo.toml
+warning: /home/shxx1/Anything/26Fall/axvisor-ebpf/Cargo.toml: unused manifest key: workspace.dependencies.vm-allocator.ref
+   Compiling axebpf v0.1.0 (/home/shxx1/Anything/26Fall/axvisor-ebpf/modules/axebpf)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.25s
+     Running unittests src/lib.rs (target/debug/deps/axebpf-de62fe9a1d45ff66)
+
+running 5 tests
+test event::tests::name_registration_is_idempotent ... ok
+test event::tests::stats_records_duration ... ok
+test event::tests::trace_event_layout_is_stable ... ok
+test platform::tests::test_mock_cpu_id ... ok
+test platform::tests::test_mock_time ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/attach_tests.rs (target/debug/deps/attach_tests-ec4cac6763fc3026)
+
+running 14 tests
+test test_attach_already_attached ... ok
+test test_attach_different_program_after_detach ... ok
+test test_attach_program_not_found ... ok
+test test_attach_success ... ok
+test test_attachment_count ... ok
+test test_detach_not_attached ... ok
+test test_detach_success ... ok
+test test_error_display ... ok
+test test_get_attached_after_detach ... ok
+test test_get_attached_exists ... ok
+test test_get_attached_not_exists ... ok
+test test_list_attachments ... ok
+test test_reattach_after_detach ... ok
+test test_reset_for_test_clears_global_state ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_addr_translate_tests.rs (target/debug/deps/guest_addr_translate_tests-9c769e98b5af350f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_kprobe_context_tests.rs (target/debug/deps/guest_kprobe_context_tests-d2ef213ec419af95)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_kprobe_handler_tests.rs (target/debug/deps/guest_kprobe_handler_tests-bef9f5fcd0c1cbe8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_kprobe_lazy_init_tests.rs (target/debug/deps/guest_kprobe_lazy_init_tests-8f2b80513c397aa1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_kprobe_manager_tests.rs (target/debug/deps/guest_kprobe_manager_tests-aed9f495d5d09d85)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_symbols_tests.rs (target/debug/deps/guest_symbols_tests-e3c80c3fc4ad51eb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_activation_tests.rs (target/debug/deps/guest_uprobe_activation_tests-e9b16c446d03acd5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_context_tests.rs (target/debug/deps/guest_uprobe_context_tests-43ebcf115931e6ea)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_exec_observer_tests.rs (target/debug/deps/guest_uprobe_exec_observer_tests-e8bd32323e4e273b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_handler_tests.rs (target/debug/deps/guest_uprobe_handler_tests-77964446e26f98ad)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_linux_runtime_observer_lazy_init_tests.rs (target/debug/deps/guest_uprobe_linux_runtime_observer_lazy_init_tests-2dfac68b3d63ba83)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_linux_runtime_observer_tests.rs (target/debug/deps/guest_uprobe_linux_runtime_observer_tests-1cc0fa8eb5e79629)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_manager_tests.rs (target/debug/deps/guest_uprobe_manager_tests-9fe39b446ad0874a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_mmap_observer_tests.rs (target/debug/deps/guest_uprobe_mmap_observer_tests-24bcae1a4e054f3e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_object_tests.rs (target/debug/deps/guest_uprobe_object_tests-70cf2901878bc28a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_process_isolation_tests.rs (target/debug/deps/guest_uprobe_process_isolation_tests-003d97d9ce549d84)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_process_maps_tests.rs (target/debug/deps/guest_uprobe_process_maps_tests-63876c0aad92ed8a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_stage2_barrier_tests.rs (target/debug/deps/guest_uprobe_stage2_barrier_tests-88010715d4e1ad99)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uprobe_user_memory_tests.rs (target/debug/deps/guest_uprobe_user_memory_tests-c1ed2836437bfd91)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_uretprobe_return_stack_tests.rs (target/debug/deps/guest_uretprobe_return_stack_tests-856d83bbadb96ea5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guest_user_addr_translate_tests.rs (target/debug/deps/guest_user_addr_translate_tests-1db643a1a96dbd07)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/helpers_tests.rs (target/debug/deps/helpers_tests-7c5db67fb3e3e84c)
+
+running 11 tests
+test test_get_helper_cpu_id ... ok
+test test_get_helper_ktime ... ok
+test test_get_helper_map_delete ... ok
+test test_get_helper_map_lookup ... ok
+test test_get_helper_map_update ... ok
+test test_get_helper_trace_printk ... ok
+test test_get_helper_unsupported ... ok
+test test_helper_ids_match_linux ... ok
+test test_map_helpers_integration ... ok
+test test_supported_helpers_count ... ok
+test test_trace_printk_helper ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/histogram_tests.rs (target/debug/deps/histogram_tests-6629be89cb75fa6c)
+
+running 18 tests
+test test_bucket_bounds_count ... ok
+test test_bucket_bounds_order ... ok
+test test_histogram_default ... ok
+test test_histogram_new ... ok
+test test_histogram_reset ... ok
+test test_percentile_distributed ... ok
+test test_percentile_empty_histogram ... ok
+test test_percentile_single_bucket ... ok
+test test_record_bucket_boundary ... ok
+test test_record_just_below_boundary ... ok
+test test_record_max_u64 ... ok
+test test_record_microsecond_range ... ok
+test test_record_millisecond_range ... ok
+test test_record_multiple_samples ... ok
+test test_record_over_second ... ok
+test test_record_same_bucket_multiple ... ok
+test test_record_sub_microsecond ... ok
+test test_record_zero_duration ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hprobe_coexistence_tests.rs (target/debug/deps/hprobe_coexistence_tests-064dbef6f8840455)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hprobe_verbose_sampling_tests.rs (target/debug/deps/hprobe_verbose_sampling_tests-0cc15c089e70fc8e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hretprobe_event_tests.rs (target/debug/deps/hretprobe_event_tests-efedd5e355639738)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hypervisor_helpers_tests.rs (target/debug/deps/hypervisor_helpers_tests-d068440463ffde10)
+
+running 13 tests
+test test_clear_context ... ok
+test test_context_max_values ... ok
+test test_context_update ... ok
+test test_context_zero_values ... ok
+test test_get_helper_exit_reason ... ok
+test test_get_helper_standard_id ... ok
+test test_get_helper_unsupported ... ok
+test test_get_helper_vcpu_id ... ok
+test test_get_helper_vm_id ... ok
+test test_helper_ignores_arguments ... ok
+test test_hypervisor_helper_ids ... ok
+test test_hypervisor_helpers_list ... ok
+test test_set_and_get_context ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/maps_tests.rs (target/debug/deps/maps_tests-8427bb34eeb1a8a5)
+
+running 15 tests
+test test_create_array_map ... ok
+test test_create_hashmap ... ok
+test test_create_lru_hash ... ok
+test test_create_queue ... ok
+test test_delete_elem ... ok
+test test_delete_nonexistent_key ... ok
+test test_destroy_map ... ok
+test test_destroy_nonexistent_map ... ok
+test test_invalid_key_size ... ok
+test test_invalid_value_size ... ok
+test test_lookup_nonexistent_key ... ok
+test test_lru_eviction ... ok
+test test_map_full_error ... ok
+test test_update_and_lookup ... ok
+test test_update_existing_key ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/runtime_tests.rs (target/debug/deps/runtime_tests-9c6eaa9d7cc9204c)
+
+running 16 tests
+test test_execute_return_42 ... ok
+test test_execute_return_zero ... ok
+test test_execute_with_context ... ok
+test test_get_program ... ok
+test test_load_elf_hprobe_entry ... ok
+test test_load_elf_hprobe_exit ... ok
+test test_load_elf_printk ... ok
+test test_load_program ... ok
+test test_load_program_elf ... ok
+test test_program_bytecode ... ok
+test test_program_new_empty ... ok
+test test_program_new_invalid_size ... ok
+test test_program_new_valid ... ok
+test test_run_program ... ok
+test test_run_unloaded_program ... ok
+test test_unload_program ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/stats_tests.rs (target/debug/deps/stats_tests-8fb6c3e13b6aafd5)
+
+running 2 tests
+test record_duration_emits_tracepoint_event_and_updates_duration_stats ... ok
+test record_hit_emits_tracepoint_event_and_updates_stats ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/symbols_tests.rs (target/debug/deps/symbols_tests-30b6ef65e2aaa1ec)
+
+running 12 tests
+test test_error_display_already_initialized ... ok
+test test_error_display_not_initialized ... ok
+test test_error_display_parse_error ... ok
+test test_init_empty_blob ... ok
+test test_init_invalid_blob ... ok
+test test_is_initialized_check ... ok
+test test_lookup_addr_empty_name ... ok
+test test_lookup_addr_long_name ... ok
+test test_lookup_addr_without_init ... ok
+test test_lookup_symbol_max_address ... ok
+test test_lookup_symbol_without_init ... ok
+test test_lookup_symbol_zero_address ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/tracepoint_tests.rs (target/debug/deps/tracepoint_tests-591e47d97343dec1)
+
+running 14 tests
+test test_error_clone ... ok
+test test_error_debug ... ok
+test test_error_display_already_initialized ... ok
+test test_error_display_init_failed ... ok
+test test_error_display_invalid_name ... ok
+test test_error_display_not_found ... ok
+test test_error_display_not_initialized ... ok
+test test_invalid_name_no_colon ... ok
+test test_is_initialized ... ok
+test test_name_with_multiple_colons ... ok
+test test_tracepoint_info_clone ... ok
+test test_tracepoint_info_debug ... ok
+test test_try_global_before_init ... ok
+test test_valid_name_format ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests axebpf
+
+running 4 tests
+test modules/axebpf/src/lib.rs - (line 14) ... ignored
+test modules/axebpf/src/lib.rs - init_with_symbols (line 209) ... ignored
+test modules/axebpf/src/macros.rs - macros (line 11) ... ignored
+test modules/axebpf/src/tracepoint.rs - tracepoint (line 8) ... ignored
+
+test result: ok. 0 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.20s; merged doctests compilation took 0.20s
