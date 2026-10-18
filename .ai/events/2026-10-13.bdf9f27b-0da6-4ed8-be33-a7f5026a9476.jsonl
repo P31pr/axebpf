@@ -1,0 +1,2 @@
+{"schema":"course-log-v1","id":"dfc9cf55-f960-4de2-b018-d9033e541ede","timestamp":"2026-10-13T05:41:36.863Z","session":"bdf9f27b-0da6-4ed8-be33-a7f5026a9476","type":"session_start","actor":"system","source":"vscode"}
+{"schema":"course-log-v1","id":"c11dbdc1-f38a-4d02-8b1f-3ac5b1f15852","timestamp":"2026-10-13T05:41:36.864Z","session":"bdf9f27b-0da6-4ed8-be33-a7f5026a9476","type":"file_open","actor":"unknown","source":"vscode","file":"docs/weekly-reports/week3.md","language":"markdown"}
