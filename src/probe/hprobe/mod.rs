@@ -5,6 +5,8 @@
 //! former "kprobe" module, now called "hprobe" to distinguish
 //! from guest kernel probes.
 
+#[cfg(all(feature = "runtime", target_arch = "aarch64"))]
+mod context;
 pub mod handler;
 pub mod manager;
 pub mod ops;

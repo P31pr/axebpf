@@ -23,13 +23,6 @@ fn emit_guest_event(vm_id: u32, pc_or_gva: u64, is_ret: bool, regs: &[u64; 31]) 
 }
 
 #[cfg(feature = "runtime")]
-fn guest_arg_regs(regs: &[u64; 31]) -> [u64; 8] {
-    [
-        regs[0], regs[1], regs[2], regs[3], regs[4], regs[5], regs[6], regs[7],
-    ]
-}
-
-#[cfg(feature = "runtime")]
 fn build_guest_ctx(
     vm_id: u32,
     is_ret: bool,
@@ -38,12 +31,11 @@ fn build_guest_ctx(
     regs: &[u64; 31],
 ) -> crate::TraceContext {
     let probe_type = if is_ret { 3 } else { 2 };
-    let regs = guest_arg_regs(regs);
     crate::TraceContext::new(0)
         .with_vm(vm_id, 0)
         .with_args(a0, a1, 0, 0)
         .with_probe_type(probe_type)
-        .with_regs(&regs)
+        .with_aarch64_gprs(regs)
 }
 
 #[cfg(all(feature = "runtime", feature = "guest-kprobe"))]

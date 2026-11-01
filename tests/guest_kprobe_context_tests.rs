@@ -28,3 +28,13 @@ fn guest_ctx_regs_are_passed_through() {
     assert_eq!(ctx.arg0, 0x100);
     assert_eq!(ctx.arg1, 0x200);
 }
+
+#[test]
+fn guest_ctx_preserves_x8_through_x30_and_marks_control_registers_unavailable() {
+    let regs = core::array::from_fn(|i| i as u64 + 100);
+    let ctx = build_guest_ctx_for_test(1, true, 0x100, 0x200, &regs);
+    assert_eq!(ctx.regs_x8_x30, regs[8..]);
+    assert_eq!(ctx.regs_valid, 3);
+    assert_eq!(ctx.probe_type, 3);
+    assert_eq!((ctx.sp, ctx.pc, ctx.pstate), (0, 0, 0));
+}

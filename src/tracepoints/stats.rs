@@ -26,19 +26,7 @@ pub fn execute_attached_program(tracepoint_name: &str, timestamp: u64, duration_
         let tp_id = registry::get_id(tracepoint_name).unwrap_or(0);
 
         // Build context
-        let mut ctx = TraceContext {
-            tracepoint_id: tp_id,
-            timestamp_ns: timestamp,
-            vm_id: 0,
-            vcpu_id: 0,
-            arg0: duration_ns,
-            arg1: 0,
-            arg2: 0,
-            arg3: 0,
-            probe_type: 0,
-            _reserved: 0,
-            regs: [0; 8],
-        };
+        let mut ctx = TraceContext::for_tracepoint(tp_id, timestamp, duration_ns);
 
         // Execute program
         if let Err(e) = runtime::run_program(info.prog_id, Some(ctx.as_bytes_mut())) {

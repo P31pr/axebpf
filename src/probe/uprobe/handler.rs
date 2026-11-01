@@ -87,13 +87,6 @@ fn emit_uprobe_event(entry: &super::manager::ActiveUprobeEntry, pc: u64) {
     crate::event::emit_event(&event);
 }
 
-#[cfg(feature = "runtime")]
-fn guest_arg_regs(regs: &[u64; 31]) -> [u64; 8] {
-    [
-        regs[0], regs[1], regs[2], regs[3], regs[4], regs[5], regs[6], regs[7],
-    ]
-}
-
 fn build_uprobe_ctx(
     vm_id: u32,
     vcpu_id: u32,
@@ -201,7 +194,6 @@ fn begin_single_step_for_return(
 
 #[cfg(feature = "runtime")]
 fn run_uprobe_program(entry: &super::manager::ActiveUprobeEntry, vcpu_id: u32, regs: &[u64; 31]) {
-    let regs = guest_arg_regs(regs);
     let mut ctx = build_uprobe_ctx(
         entry.vm_id,
         vcpu_id,
@@ -210,7 +202,7 @@ fn run_uprobe_program(entry: &super::manager::ActiveUprobeEntry, vcpu_id: u32, r
         entry.mm,
         entry.is_ret,
     )
-    .with_regs(&regs);
+    .with_aarch64_gprs(regs);
     crate::tracepoints::hypervisor_helpers::set_current_context(entry.vm_id, vcpu_id, 0);
     let _ = crate::runtime::run_program(entry.prog_id, Some(ctx.as_bytes_mut()));
     crate::tracepoints::hypervisor_helpers::clear_current_context();

@@ -418,6 +418,31 @@ impl KprobeRegistry {
     }
 }
 
+#[cfg(feature = "runtime")]
+fn execute_probe_program(
+    prog_id: u32,
+    regs: &mut kprobe::PtRegs,
+    is_return: bool,
+) -> Result<u64, crate::runtime::Error> {
+    #[cfg(target_arch = "aarch64")]
+    {
+        super::context::run_program(prog_id, regs, is_return)
+    }
+    #[cfg(not(target_arch = "aarch64"))]
+    {
+        // This migration defines an AArch64 ABI only. Other architectures retain
+        // the existing native PtRegs input until their own adapters are defined.
+        let _ = is_return;
+        let bytes = unsafe {
+            core::slice::from_raw_parts_mut(
+                regs as *mut kprobe::PtRegs as *mut u8,
+                core::mem::size_of::<kprobe::PtRegs>(),
+            )
+        };
+        crate::runtime::run_program(prog_id, Some(bytes))
+    }
+}
+
 /// Pre-handler for kprobe (non-ret): execute eBPF on function entry.
 /// Retrieves prog_id from user_data instead of locking the registry.
 fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs) {
@@ -427,13 +452,7 @@ fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs
 
     #[cfg(feature = "runtime")]
     {
-        let ctx_bytes = unsafe {
-            core::slice::from_raw_parts_mut(
-                pt_regs as *mut kprobe::PtRegs as *mut u8,
-                core::mem::size_of::<kprobe::PtRegs>(),
-            )
-        };
-        if let Err(e) = crate::runtime::run_program(ud.prog_id, Some(ctx_bytes)) {
+        if let Err(e) = execute_probe_program(ud.prog_id, pt_regs, false) {
             log::warn!(
                 "hprobe: eBPF execution failed at {:#x}: {:?}",
                 ud.probe_addr,
@@ -474,13 +493,7 @@ fn kprobe_ret_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs
 
     #[cfg(feature = "runtime")]
     {
-        let ctx_bytes = unsafe {
-            core::slice::from_raw_parts_mut(
-                pt_regs as *mut kprobe::PtRegs as *mut u8,
-                core::mem::size_of::<kprobe::PtRegs>(),
-            )
-        };
-        if let Err(e) = crate::runtime::run_program(ud.prog_id, Some(ctx_bytes)) {
+        if let Err(e) = execute_probe_program(ud.prog_id, pt_regs, true) {
             log::warn!(
                 "hretprobe: eBPF execution failed at {:#x}: {:?}",
                 ud.probe_addr,
@@ -625,4 +638,26 @@ pub fn emit_hretprobe_event_for_test(probe_addr: usize, retval: u64) {
 /// Test helper: expose verbose hit sampling policy for regression tests.
 pub fn should_log_verbose_hit_for_test(hit: u64) -> bool {
     should_log_verbose_hit(hit)
+}
+
+#[cfg(all(feature = "test-utils", feature = "runtime", target_arch = "aarch64"))]
+#[doc(hidden)]
+pub fn build_context_for_test(regs: &kprobe::PtRegs, is_return: bool) -> crate::TraceContext {
+    super::context::build_context(regs, is_return)
+}
+
+#[cfg(all(feature = "test-utils", feature = "runtime", target_arch = "aarch64"))]
+#[doc(hidden)]
+pub fn write_back_registers_for_test(ctx: &crate::TraceContext, regs: &mut kprobe::PtRegs) {
+    super::context::write_back_registers(ctx, regs)
+}
+
+#[cfg(all(feature = "test-utils", feature = "runtime", target_arch = "aarch64"))]
+#[doc(hidden)]
+pub fn execute_probe_program_for_test(
+    prog_id: u32,
+    regs: &mut kprobe::PtRegs,
+    is_return: bool,
+) -> Result<u64, crate::runtime::Error> {
+    execute_probe_program(prog_id, regs, is_return)
 }
