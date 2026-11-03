@@ -443,18 +443,19 @@ fn execute_probe_program(
     }
 }
 
-/// Pre-handler for kprobe (non-ret): execute eBPF on function entry.
-/// Retrieves prog_id from user_data instead of locking the registry.
-fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs) {
+/// Execute a probe callback using its user data, then report the hit.
+fn handle_probe_hit(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs, is_return: bool) {
     let Some(ud) = data.as_any().downcast_ref::<HprobeUserData>() else {
         return;
     };
 
     #[cfg(feature = "runtime")]
     {
-        if let Err(e) = execute_probe_program(ud.prog_id, pt_regs, false) {
+        if let Err(e) = execute_probe_program(ud.prog_id, pt_regs, is_return) {
+            let probe_kind = if is_return { "hretprobe" } else { "hprobe" };
             log::warn!(
-                "hprobe: eBPF execution failed at {:#x}: {:?}",
+                "{}: eBPF execution failed at {:#x}: {:?}",
+                probe_kind,
                 ud.probe_addr,
                 e
             );
@@ -464,18 +465,39 @@ fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs
             && let Some(hit) = next_verbose_hit(&ud.verbose_hits)
         {
             let regs = &*pt_regs;
-            log::info!(
-                "[hprobe] ENTRY {} hit={} sampled={} x0={:#x} x1={:#x} x2={:#x} x3={:#x}",
-                ud.symbol,
-                hit,
-                hit > VERBOSE_HIT_LOG_BURST,
-                arg_at(regs, 0),
-                arg_at(regs, 1),
-                arg_at(regs, 2),
-                arg_at(regs, 3)
-            );
+            let sampled = hit > VERBOSE_HIT_LOG_BURST;
+            if is_return {
+                log::info!(
+                    "[hprobe] EXIT {} hit={} sampled={} retval={:#x}",
+                    ud.symbol,
+                    hit,
+                    sampled,
+                    arg_at(regs, 0)
+                );
+            } else {
+                log::info!(
+                    "[hprobe] ENTRY {} hit={} sampled={} x0={:#x} x1={:#x} x2={:#x} x3={:#x}",
+                    ud.symbol,
+                    hit,
+                    sampled,
+                    arg_at(regs, 0),
+                    arg_at(regs, 1),
+                    arg_at(regs, 2),
+                    arg_at(regs, 3)
+                );
+            }
+        }
+
+        #[cfg(feature = "tracepoint-support")]
+        if is_return {
+            emit_hretprobe_event(ud.probe_addr, arg_at(pt_regs, 0));
         }
     }
+}
+
+/// Pre-handler for kprobe (non-ret): execute eBPF on function entry.
+fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs) {
+    handle_probe_hit(data, pt_regs, false);
 }
 
 /// Entry handler for kretprobe: called at function entry before LR replacement.
@@ -487,36 +509,7 @@ fn kprobe_entry_handler(_data: &dyn kprobe::ProbeData, _pt_regs: &mut kprobe::Pt
 /// Return handler for kretprobe: execute eBPF when the probed function returns.
 /// Called from the kprobe library's trampoline mechanism.
 fn kprobe_ret_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs) {
-    let Some(ud) = data.as_any().downcast_ref::<HprobeUserData>() else {
-        return;
-    };
-
-    #[cfg(feature = "runtime")]
-    {
-        if let Err(e) = execute_probe_program(ud.prog_id, pt_regs, true) {
-            log::warn!(
-                "hretprobe: eBPF execution failed at {:#x}: {:?}",
-                ud.probe_addr,
-                e
-            );
-        }
-
-        if crate::attach::is_verbose()
-            && let Some(hit) = next_verbose_hit(&ud.verbose_hits)
-        {
-            let regs = &*pt_regs;
-            log::info!(
-                "[hprobe] EXIT {} hit={} sampled={} retval={:#x}",
-                ud.symbol,
-                hit,
-                hit > VERBOSE_HIT_LOG_BURST,
-                arg_at(regs, 0)
-            );
-        }
-
-        #[cfg(feature = "tracepoint-support")]
-        emit_hretprobe_event(ud.probe_addr, arg_at(pt_regs, 0));
-    }
+    handle_probe_hit(data, pt_regs, true);
 }
 
 #[cfg(all(feature = "runtime", feature = "tracepoint-support"))]
