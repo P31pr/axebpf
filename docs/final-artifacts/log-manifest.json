@@ -1,0 +1,14 @@
+{
+  "uprobe-pending.log": {
+    "origin": "user-provided manual integration log",
+    "sha256": "cfeeacc5aa6e5ed1b5ec31fa29131e9ec072939dff3c37c4b6744a765589d9e5"
+  },
+  "s2fault-three-layer.log": {
+    "origin": "user-provided manual integration log",
+    "sha256": "1ee6c820f29afd71f95a8d1e4d25291b66292b1bb94a2a8e3490873288b2abf2"
+  },
+  "brk-three-layer.log": {
+    "origin": "user-provided manual integration log",
+    "sha256": "256c3dcc5fd3187e5960445f8dec4f304cde5cd10ea9d88d2570aab1ebab01da"
+  }
+}

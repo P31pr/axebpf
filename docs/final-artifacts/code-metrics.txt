@@ -1,0 +1,13 @@
+Scope: tracked src files only; exclude tests/docs/.ai/build outputs.
+
+Command: git diff --numstat 4eee9c2 2814176 -- src
+55	9	src/context.rs
+58	0	src/probe/hprobe/context.rs
+85	57	src/probe/hprobe/manager.rs
+2	0	src/probe/hprobe/mod.rs
+1	9	src/probe/kprobe/handler.rs
+1	9	src/probe/uprobe/handler.rs
+1	13	src/tracepoints/stats.rs
+
+Command: git diff --numstat 317635a 2814176 -- src/probe/hprobe/manager.rs
+38	45	src/probe/hprobe/manager.rs

@@ -1,0 +1,37 @@
+diff --git a/src/arch/aarch64/cpu.rs b/src/arch/aarch64/cpu.rs
+index 93f517e..60fce6d 100644
+--- a/src/arch/aarch64/cpu.rs
++++ b/src/arch/aarch64/cpu.rs
+@@ -17,6 +17,16 @@ use crate::{
+     },
+ };
+ 
++// Private demo ABI, shared with axebpf/demos/axtrace/axtrace.c.
++const AXTRACE_SUBMIT: u64 = 0x4158_5401;
++
++// Keep a stable function boundary for an hprobe on the request ID in x0.
++#[inline(never)]
++fn axtrace_submit(request: u64, vm_id: usize) -> isize {
++    info!("axtrace: HOST request={} vm={}", request, vm_id);
++    0
++}
++
+ pub struct HCpu {
+     pub id: CpuId,
+     pub hard_id: CpuHardId,
+@@ -150,7 +160,14 @@ impl VCpuOp for VCpu {
+                 exit_reason
+             );
+             match exit_reason {
+-                arm_vcpu::AxVCpuExitReason::Hypercall { nr, args } => todo!(),
++                arm_vcpu::AxVCpuExitReason::Hypercall { nr, args } => {
++                    let status = if nr == AXTRACE_SUBMIT {
++                        axtrace_submit(args[0], usize::from(self.vm_id()))
++                    } else {
++                        -38 // ENOSYS: unsupported demo hypercall.
++                    };
++                    self.vcpu.set_gpr(0, status as usize);
++                }
+                 arm_vcpu::AxVCpuExitReason::MmioRead {
+                     addr,
+                     width,

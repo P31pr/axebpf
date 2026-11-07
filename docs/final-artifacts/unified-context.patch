@@ -1,0 +1,815 @@
+diff --git a/include/axebpf_trace_context.h b/include/axebpf_trace_context.h
+new file mode 100644
+index 0000000..1066433
+--- /dev/null
++++ b/include/axebpf_trace_context.h
+@@ -0,0 +1,69 @@
++#ifndef AXEBPF_TRACE_CONTEXT_H
++#define AXEBPF_TRACE_CONTEXT_H
++
++#include <stddef.h>
++#include <stdint.h>
++
++/* Input IDs, NOT TraceEvent output IDs. */
++enum axebpf_context_probe_type {
++    AXEBPF_CTX_HPROBE = 0,
++    AXEBPF_CTX_HRETPROBE = 1,
++    AXEBPF_CTX_KPROBE = 2,
++    AXEBPF_CTX_KRETPROBE = 3,
++    AXEBPF_CTX_TRACEPOINT = 4,
++    AXEBPF_CTX_UPROBE = 5,
++    AXEBPF_CTX_URETPROBE = 6,
++};
++
++#define AXEBPF_REGS_VALID_X0_X7 (UINT64_C(1) << 0)
++#define AXEBPF_REGS_VALID_X8_X30 (UINT64_C(1) << 1)
++#define AXEBPF_REGS_VALID_CONTROL (UINT64_C(1) << 2)
++
++/* Fixed AArch64 input ABI. See docs/trace-context-abi.md for writeback rules. */
++struct axebpf_trace_context {
++    uint64_t timestamp_ns;
++    uint32_t tracepoint_id;
++    uint32_t vm_id;
++    uint32_t vcpu_id;
++    uint32_t probe_type;
++    uint64_t arg0;
++    uint64_t arg1;
++    uint64_t arg2;
++    uint64_t arg3;
++    uint64_t regs[8];
++    uint64_t regs_x8_x30[23];
++    uint64_t sp;
++    uint64_t pc;
++    uint64_t pstate;
++    uint64_t orig_x0;
++    int32_t syscallno;
++    uint32_t unused2;
++    uint64_t regs_valid;
++} __attribute__((aligned(8)));
++
++#define AXEBPF_CTX_OFFSET(field, expected) \
++    _Static_assert(offsetof(struct axebpf_trace_context, field) == (expected), \
++                   "unexpected TraceContext offset: " #field)
++AXEBPF_CTX_OFFSET(timestamp_ns, 0);
++AXEBPF_CTX_OFFSET(tracepoint_id, 8);
++AXEBPF_CTX_OFFSET(vm_id, 12);
++AXEBPF_CTX_OFFSET(vcpu_id, 16);
++AXEBPF_CTX_OFFSET(probe_type, 20);
++AXEBPF_CTX_OFFSET(arg0, 24);
++AXEBPF_CTX_OFFSET(arg1, 32);
++AXEBPF_CTX_OFFSET(arg2, 40);
++AXEBPF_CTX_OFFSET(arg3, 48);
++AXEBPF_CTX_OFFSET(regs, 56);
++AXEBPF_CTX_OFFSET(regs_x8_x30, 120);
++AXEBPF_CTX_OFFSET(sp, 304);
++AXEBPF_CTX_OFFSET(pc, 312);
++AXEBPF_CTX_OFFSET(pstate, 320);
++AXEBPF_CTX_OFFSET(orig_x0, 328);
++AXEBPF_CTX_OFFSET(syscallno, 336);
++AXEBPF_CTX_OFFSET(unused2, 340);
++AXEBPF_CTX_OFFSET(regs_valid, 344);
++#undef AXEBPF_CTX_OFFSET
++_Static_assert(sizeof(struct axebpf_trace_context) == 352, "unexpected TraceContext size");
++_Static_assert(_Alignof(struct axebpf_trace_context) == 8, "unexpected TraceContext alignment");
++
++#endif
+diff --git a/src/context.rs b/src/context.rs
+index d5dde8a..c72115f 100644
+--- a/src/context.rs
++++ b/src/context.rs
+@@ -2,6 +2,16 @@
+ 
+ use crate::platform;
+ 
++/// x0-x7 are available in the AArch64 register snapshot.
++pub const REGS_VALID_X0_X7: u64 = 1 << 0;
++/// x8-x30 are available in the AArch64 register snapshot.
++pub const REGS_VALID_X8_X30: u64 = 1 << 1;
++/// SP, PC and PSTATE are available in the AArch64 register snapshot.
++pub const REGS_VALID_CONTROL: u64 = 1 << 2;
++
++/// Input-context type ID. These IDs differ from `event::PROBE_*` output IDs.
++pub const PROBE_TRACEPOINT: u32 = 4;
++
+ /// Tracepoint context passed to eBPF programs.
+ ///
+ /// Constructed when a tracepoint fires and passed as input data to eBPF programs.
+@@ -9,14 +19,17 @@ use crate::platform;
+ #[repr(C)]
+ #[derive(Debug, Clone, Copy, Default)]
+ pub struct TraceContext {
+-    /// Tracepoint unique identifier
+-    pub tracepoint_id: u32,
+     /// Trigger timestamp (nanoseconds)
+     pub timestamp_ns: u64,
++    /// Static tracepoint unique identifier (0 for dynamic probes).
++    pub tracepoint_id: u32,
+     /// VM ID (0 means not associated)
+     pub vm_id: u32,
+     /// vCPU ID (0 means not associated)
+     pub vcpu_id: u32,
++    /// Probe type
++    /// (0=hprobe, 1=hretprobe, 2=kprobe, 3=kretprobe, 4=tracepoint, 5=uprobe, 6=uretprobe)
++    pub probe_type: u32,
+     /// Tracepoint argument 0
+     pub arg0: u64,
+     /// Tracepoint argument 1
+@@ -25,16 +38,40 @@ pub struct TraceContext {
+     pub arg2: u64,
+     /// Tracepoint argument 3
+     pub arg3: u64,
+-    /// Probe type
+-    /// (0=hprobe, 1=hretprobe, 2=kprobe, 3=kretprobe, 4=tracepoint, 5=uprobe, 6=uretprobe)
+-    pub probe_type: u32,
+-    /// Reserved for alignment
+-    pub _reserved: u32,
+-    /// Guest registers (x0-x7 on AArch64) for kprobe context
++    /// Host or guest x0-x7. These are the authoritative writable register slots.
+     pub regs: [u64; 8],
++    /// AArch64 x8-x30, without duplicating the original x0-x7 slots.
++    pub regs_x8_x30: [u64; 23],
++    /// Saved stack pointer; available when REGS_VALID_CONTROL is set.
++    pub sp: u64,
++    /// Saved program counter; available when REGS_VALID_CONTROL is set.
++    pub pc: u64,
++    /// Saved processor state; available when REGS_VALID_CONTROL is set.
++    pub pstate: u64,
++    /// Preserved PtRegs auxiliary fields. The current hprobe TrapFrame bridge
++    /// initializes these to zero; they do not describe a valid syscall context.
++    pub orig_x0: u64,
++    /// Preserved PtRegs syscall-number slot (not a valid hprobe syscall number).
++    pub syscallno: i32,
++    /// Preserved PtRegs reserved slot.
++    pub unused2: u32,
++    /// Available register groups (`REGS_VALID_*`). Input metadata, not a write mask.
++    pub regs_valid: u64,
+ }
+ 
++
+ impl TraceContext {
++    /// Build a static event input. Static events carry no register snapshot.
++    pub fn for_tracepoint(tracepoint_id: u32, timestamp_ns: u64, duration_ns: u64) -> Self {
++        Self {
++            tracepoint_id,
++            timestamp_ns,
++            arg0: duration_ns,
++            probe_type: PROBE_TRACEPOINT,
++            ..Default::default()
++        }
++    }
++
+     /// Create a new trace context.
+     pub fn new(tracepoint_id: u32) -> Self {
+         Self {
+@@ -66,9 +103,18 @@ impl TraceContext {
+         self
+     }
+ 
+-    /// Set guest registers (x0-x7).
++    /// Set x0-x7; preserves any other register groups already present.
+     pub fn with_regs(mut self, regs: &[u64; 8]) -> Self {
+         self.regs = *regs;
++        self.regs_valid |= REGS_VALID_X0_X7;
++        self
++    }
++
++    /// Set all AArch64 general-purpose registers. Does not supply SP/PC/PSTATE.
++    pub fn with_aarch64_gprs(mut self, regs: &[u64; 31]) -> Self {
++        self.regs.copy_from_slice(&regs[..8]);
++        self.regs_x8_x30.copy_from_slice(&regs[8..]);
++        self.regs_valid |= REGS_VALID_X0_X7 | REGS_VALID_X8_X30;
+         self
+     }
+ 
+diff --git a/src/probe/hprobe/context.rs b/src/probe/hprobe/context.rs
+new file mode 100644
+index 0000000..f65fa48
+--- /dev/null
++++ b/src/probe/hprobe/context.rs
+@@ -0,0 +1,58 @@
++//! AArch64 hprobe input ABI adapter. The kprobe framework retains its PtRegs.
++
++use crate::context::{REGS_VALID_CONTROL, TraceContext};
++use crate::probe::ProbeType;
++use crate::runtime;
++use kprobe::PtRegs;
++
++pub(super) fn build_context(regs: &PtRegs, is_return: bool) -> TraceContext {
++    let probe_type = if is_return {
++        ProbeType::Hretprobe
++    } else {
++        ProbeType::Hprobe
++    };
++    let mut ctx = TraceContext::new(0)
++        .with_probe_type(probe_type as u32)
++        .with_aarch64_gprs(&regs.regs);
++    // No generic guest association or tracepoint ID is available in this callback.
++    // arg0..arg3 are a read snapshot only; register writes use regs/regs_x8_x30.
++    ctx.arg0 = regs.regs[0];
++    if !is_return {
++        ctx.arg1 = regs.regs[1];
++        ctx.arg2 = regs.regs[2];
++        ctx.arg3 = regs.regs[3];
++    }
++    ctx.sp = regs.sp;
++    ctx.pc = regs.pc;
++    ctx.pstate = regs.pstate;
++    ctx.orig_x0 = regs.orig_x0;
++    ctx.syscallno = regs.syscallno;
++    ctx.unused2 = regs.unused2;
++    ctx.regs_valid |= REGS_VALID_CONTROL;
++    ctx
++}
++
++pub(super) fn write_back_registers(ctx: &TraceContext, regs: &mut PtRegs) {
++    regs.regs[..8].copy_from_slice(&ctx.regs);
++    regs.regs[8..].copy_from_slice(&ctx.regs_x8_x30);
++    regs.sp = ctx.sp;
++    regs.pc = ctx.pc;
++    regs.pstate = ctx.pstate;
++    regs.orig_x0 = ctx.orig_x0;
++    regs.syscallno = ctx.syscallno;
++    regs.unused2 = ctx.unused2;
++}
++
++pub(super) fn run_program(
++    prog_id: u32,
++    regs: &mut PtRegs,
++    is_return: bool,
++) -> Result<u64, runtime::Error> {
++    let mut ctx = build_context(regs, is_return);
++    let result = runtime::run_program(prog_id, Some(ctx.as_bytes_mut()));
++    // Match the previous directly borrowed PtRegs behavior: stores made before
++    // an execution error are retained too. Do this before returning to kprobe,
++    // which may subsequently redirect PC or replace LR itself.
++    write_back_registers(&ctx, regs);
++    result
++}
+diff --git a/src/probe/hprobe/manager.rs b/src/probe/hprobe/manager.rs
+index 8d0caa6..113bb17 100644
+--- a/src/probe/hprobe/manager.rs
++++ b/src/probe/hprobe/manager.rs
+@@ -418,24 +418,44 @@ impl KprobeRegistry {
+     }
+ }
+ 
+-/// Pre-handler for kprobe (non-ret): execute eBPF on function entry.
+-/// Retrieves prog_id from user_data instead of locking the registry.
+-fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs) {
++#[cfg(feature = "runtime")]
++fn execute_probe_program(
++    prog_id: u32,
++    regs: &mut kprobe::PtRegs,
++    is_return: bool,
++) -> Result<u64, crate::runtime::Error> {
++    #[cfg(target_arch = "aarch64")]
++    {
++        super::context::run_program(prog_id, regs, is_return)
++    }
++    #[cfg(not(target_arch = "aarch64"))]
++    {
++        // This migration defines an AArch64 ABI only. Other architectures retain
++        // the existing native PtRegs input until their own adapters are defined.
++        let _ = is_return;
++        let bytes = unsafe {
++            core::slice::from_raw_parts_mut(
++                regs as *mut kprobe::PtRegs as *mut u8,
++                core::mem::size_of::<kprobe::PtRegs>(),
++            )
++        };
++        crate::runtime::run_program(prog_id, Some(bytes))
++    }
++}
++
++/// Execute a probe callback using its user data, then report the hit.
++fn handle_probe_hit(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs, is_return: bool) {
+     let Some(ud) = data.as_any().downcast_ref::<HprobeUserData>() else {
+         return;
+     };
+ 
+     #[cfg(feature = "runtime")]
+     {
+-        let ctx_bytes = unsafe {
+-            core::slice::from_raw_parts_mut(
+-                pt_regs as *mut kprobe::PtRegs as *mut u8,
+-                core::mem::size_of::<kprobe::PtRegs>(),
+-            )
+-        };
+-        if let Err(e) = crate::runtime::run_program(ud.prog_id, Some(ctx_bytes)) {
++        if let Err(e) = execute_probe_program(ud.prog_id, pt_regs, is_return) {
++            let probe_kind = if is_return { "hretprobe" } else { "hprobe" };
+             log::warn!(
+-                "hprobe: eBPF execution failed at {:#x}: {:?}",
++                "{}: eBPF execution failed at {:#x}: {:?}",
++                probe_kind,
+                 ud.probe_addr,
+                 e
+             );
+@@ -445,20 +465,41 @@ fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs
+             && let Some(hit) = next_verbose_hit(&ud.verbose_hits)
+         {
+             let regs = &*pt_regs;
+-            log::info!(
+-                "[hprobe] ENTRY {} hit={} sampled={} x0={:#x} x1={:#x} x2={:#x} x3={:#x}",
+-                ud.symbol,
+-                hit,
+-                hit > VERBOSE_HIT_LOG_BURST,
+-                arg_at(regs, 0),
+-                arg_at(regs, 1),
+-                arg_at(regs, 2),
+-                arg_at(regs, 3)
+-            );
++            let sampled = hit > VERBOSE_HIT_LOG_BURST;
++            if is_return {
++                log::info!(
++                    "[hprobe] EXIT {} hit={} sampled={} retval={:#x}",
++                    ud.symbol,
++                    hit,
++                    sampled,
++                    arg_at(regs, 0)
++                );
++            } else {
++                log::info!(
++                    "[hprobe] ENTRY {} hit={} sampled={} x0={:#x} x1={:#x} x2={:#x} x3={:#x}",
++                    ud.symbol,
++                    hit,
++                    sampled,
++                    arg_at(regs, 0),
++                    arg_at(regs, 1),
++                    arg_at(regs, 2),
++                    arg_at(regs, 3)
++                );
++            }
++        }
++
++        #[cfg(feature = "tracepoint-support")]
++        if is_return {
++            emit_hretprobe_event(ud.probe_addr, arg_at(pt_regs, 0));
+         }
+     }
+ }
+ 
++/// Pre-handler for kprobe (non-ret): execute eBPF on function entry.
++fn kprobe_pre_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs) {
++    handle_probe_hit(data, pt_regs, false);
++}
++
+ /// Entry handler for kretprobe: called at function entry before LR replacement.
+ /// No eBPF execution here; the return handler runs eBPF on function return.
+ fn kprobe_entry_handler(_data: &dyn kprobe::ProbeData, _pt_regs: &mut kprobe::PtRegs) {
+@@ -468,42 +509,7 @@ fn kprobe_entry_handler(_data: &dyn kprobe::ProbeData, _pt_regs: &mut kprobe::Pt
+ /// Return handler for kretprobe: execute eBPF when the probed function returns.
+ /// Called from the kprobe library's trampoline mechanism.
+ fn kprobe_ret_handler(data: &dyn kprobe::ProbeData, pt_regs: &mut kprobe::PtRegs) {
+-    let Some(ud) = data.as_any().downcast_ref::<HprobeUserData>() else {
+-        return;
+-    };
+-
+-    #[cfg(feature = "runtime")]
+-    {
+-        let ctx_bytes = unsafe {
+-            core::slice::from_raw_parts_mut(
+-                pt_regs as *mut kprobe::PtRegs as *mut u8,
+-                core::mem::size_of::<kprobe::PtRegs>(),
+-            )
+-        };
+-        if let Err(e) = crate::runtime::run_program(ud.prog_id, Some(ctx_bytes)) {
+-            log::warn!(
+-                "hretprobe: eBPF execution failed at {:#x}: {:?}",
+-                ud.probe_addr,
+-                e
+-            );
+-        }
+-
+-        if crate::attach::is_verbose()
+-            && let Some(hit) = next_verbose_hit(&ud.verbose_hits)
+-        {
+-            let regs = &*pt_regs;
+-            log::info!(
+-                "[hprobe] EXIT {} hit={} sampled={} retval={:#x}",
+-                ud.symbol,
+-                hit,
+-                hit > VERBOSE_HIT_LOG_BURST,
+-                arg_at(regs, 0)
+-            );
+-        }
+-
+-        #[cfg(feature = "tracepoint-support")]
+-        emit_hretprobe_event(ud.probe_addr, arg_at(pt_regs, 0));
+-    }
++    handle_probe_hit(data, pt_regs, true);
+ }
+ 
+ #[cfg(all(feature = "runtime", feature = "tracepoint-support"))]
+@@ -626,3 +632,25 @@ pub fn emit_hretprobe_event_for_test(probe_addr: usize, retval: u64) {
+ pub fn should_log_verbose_hit_for_test(hit: u64) -> bool {
+     should_log_verbose_hit(hit)
+ }
++
++#[cfg(all(feature = "test-utils", feature = "runtime", target_arch = "aarch64"))]
++#[doc(hidden)]
++pub fn build_context_for_test(regs: &kprobe::PtRegs, is_return: bool) -> crate::TraceContext {
++    super::context::build_context(regs, is_return)
++}
++
++#[cfg(all(feature = "test-utils", feature = "runtime", target_arch = "aarch64"))]
++#[doc(hidden)]
++pub fn write_back_registers_for_test(ctx: &crate::TraceContext, regs: &mut kprobe::PtRegs) {
++    super::context::write_back_registers(ctx, regs)
++}
++
++#[cfg(all(feature = "test-utils", feature = "runtime", target_arch = "aarch64"))]
++#[doc(hidden)]
++pub fn execute_probe_program_for_test(
++    prog_id: u32,
++    regs: &mut kprobe::PtRegs,
++    is_return: bool,
++) -> Result<u64, crate::runtime::Error> {
++    execute_probe_program(prog_id, regs, is_return)
++}
+diff --git a/src/probe/hprobe/mod.rs b/src/probe/hprobe/mod.rs
+index 1f94642..53af882 100644
+--- a/src/probe/hprobe/mod.rs
++++ b/src/probe/hprobe/mod.rs
+@@ -5,6 +5,8 @@
+ //! former "kprobe" module, now called "hprobe" to distinguish
+ //! from guest kernel probes.
+ 
++#[cfg(all(feature = "runtime", target_arch = "aarch64"))]
++mod context;
+ pub mod handler;
+ pub mod manager;
+ pub mod ops;
+diff --git a/src/probe/kprobe/handler.rs b/src/probe/kprobe/handler.rs
+index 56f5006..76f33a0 100644
+--- a/src/probe/kprobe/handler.rs
++++ b/src/probe/kprobe/handler.rs
+@@ -22,13 +22,6 @@ fn emit_guest_event(vm_id: u32, pc_or_gva: u64, is_ret: bool, regs: &[u64; 31])
+     crate::event::emit_event(&event);
+ }
+ 
+-#[cfg(feature = "runtime")]
+-fn guest_arg_regs(regs: &[u64; 31]) -> [u64; 8] {
+-    [
+-        regs[0], regs[1], regs[2], regs[3], regs[4], regs[5], regs[6], regs[7],
+-    ]
+-}
+-
+ #[cfg(feature = "runtime")]
+ fn build_guest_ctx(
+     vm_id: u32,
+@@ -38,12 +31,11 @@ fn build_guest_ctx(
+     regs: &[u64; 31],
+ ) -> crate::TraceContext {
+     let probe_type = if is_ret { 3 } else { 2 };
+-    let regs = guest_arg_regs(regs);
+     crate::TraceContext::new(0)
+         .with_vm(vm_id, 0)
+         .with_args(a0, a1, 0, 0)
+         .with_probe_type(probe_type)
+-        .with_regs(&regs)
++        .with_aarch64_gprs(regs)
+ }
+ 
+ #[cfg(all(feature = "runtime", feature = "guest-kprobe"))]
+diff --git a/src/probe/uprobe/handler.rs b/src/probe/uprobe/handler.rs
+index 34cfe3a..71dd8e8 100644
+--- a/src/probe/uprobe/handler.rs
++++ b/src/probe/uprobe/handler.rs
+@@ -87,13 +87,6 @@ fn emit_uprobe_event(entry: &super::manager::ActiveUprobeEntry, pc: u64) {
+     crate::event::emit_event(&event);
+ }
+ 
+-#[cfg(feature = "runtime")]
+-fn guest_arg_regs(regs: &[u64; 31]) -> [u64; 8] {
+-    [
+-        regs[0], regs[1], regs[2], regs[3], regs[4], regs[5], regs[6], regs[7],
+-    ]
+-}
+-
+ fn build_uprobe_ctx(
+     vm_id: u32,
+     vcpu_id: u32,
+@@ -201,7 +194,6 @@ fn begin_single_step_for_return(
+ 
+ #[cfg(feature = "runtime")]
+ fn run_uprobe_program(entry: &super::manager::ActiveUprobeEntry, vcpu_id: u32, regs: &[u64; 31]) {
+-    let regs = guest_arg_regs(regs);
+     let mut ctx = build_uprobe_ctx(
+         entry.vm_id,
+         vcpu_id,
+@@ -210,7 +202,7 @@ fn run_uprobe_program(entry: &super::manager::ActiveUprobeEntry, vcpu_id: u32, r
+         entry.mm,
+         entry.is_ret,
+     )
+-    .with_regs(&regs);
++    .with_aarch64_gprs(regs);
+     crate::tracepoints::hypervisor_helpers::set_current_context(entry.vm_id, vcpu_id, 0);
+     let _ = crate::runtime::run_program(entry.prog_id, Some(ctx.as_bytes_mut()));
+     crate::tracepoints::hypervisor_helpers::clear_current_context();
+diff --git a/src/tracepoints/stats.rs b/src/tracepoints/stats.rs
+index 3f3308e..7207ea9 100644
+--- a/src/tracepoints/stats.rs
++++ b/src/tracepoints/stats.rs
+@@ -26,19 +26,7 @@ pub fn execute_attached_program(tracepoint_name: &str, timestamp: u64, duration_
+         let tp_id = registry::get_id(tracepoint_name).unwrap_or(0);
+ 
+         // Build context
+-        let mut ctx = TraceContext {
+-            tracepoint_id: tp_id,
+-            timestamp_ns: timestamp,
+-            vm_id: 0,
+-            vcpu_id: 0,
+-            arg0: duration_ns,
+-            arg1: 0,
+-            arg2: 0,
+-            arg3: 0,
+-            probe_type: 0,
+-            _reserved: 0,
+-            regs: [0; 8],
+-        };
++        let mut ctx = TraceContext::for_tracepoint(tp_id, timestamp, duration_ns);
+ 
+         // Execute program
+         if let Err(e) = runtime::run_program(info.prog_id, Some(ctx.as_bytes_mut())) {
+diff --git a/tests/guest_kprobe_context_tests.rs b/tests/guest_kprobe_context_tests.rs
+index b6e2a42..254c6a6 100644
+--- a/tests/guest_kprobe_context_tests.rs
++++ b/tests/guest_kprobe_context_tests.rs
+@@ -28,3 +28,13 @@ fn guest_ctx_regs_are_passed_through() {
+     assert_eq!(ctx.arg0, 0x100);
+     assert_eq!(ctx.arg1, 0x200);
+ }
++
++#[test]
++fn guest_ctx_preserves_x8_through_x30_and_marks_control_registers_unavailable() {
++    let regs = core::array::from_fn(|i| i as u64 + 100);
++    let ctx = build_guest_ctx_for_test(1, true, 0x100, 0x200, &regs);
++    assert_eq!(ctx.regs_x8_x30, regs[8..]);
++    assert_eq!(ctx.regs_valid, 3);
++    assert_eq!(ctx.probe_type, 3);
++    assert_eq!((ctx.sp, ctx.pc, ctx.pstate), (0, 0, 0));
++}
+diff --git a/tests/hprobe_context_tests.rs b/tests/hprobe_context_tests.rs
+new file mode 100644
+index 0000000..c4a9b73
+--- /dev/null
++++ b/tests/hprobe_context_tests.rs
+@@ -0,0 +1,134 @@
++#![cfg(all(
++    feature = "hprobe",
++    feature = "runtime",
++    feature = "test-utils",
++    target_arch = "aarch64"
++))]
++
++use axebpf::hprobe_manager::{
++    build_context_for_test as build_context, execute_probe_program_for_test as run_program,
++    write_back_registers_for_test as write_back_registers,
++};
++use axebpf::{PtRegs, runtime};
++
++fn registers() -> PtRegs {
++    PtRegs {
++        regs: core::array::from_fn(|i| 0x1000 + i as u64),
++        sp: 0x2000,
++        pc: 0x3000,
++        pstate: 0x3c5,
++        orig_x0: 0x4000,
++        syscallno: -1,
++        unused2: 0x55,
++    }
++}
++
++fn insn(code: u8, registers: u8, offset: i16, imm: i32) -> [u8; 8] {
++    let [lo, hi] = offset.to_le_bytes();
++    let [a, b, c, d] = imm.to_le_bytes();
++    [code, registers, lo, hi, a, b, c, d]
++}
++
++fn execute(bytecode: &[u8], regs: &mut PtRegs, is_return: bool) -> Result<u64, runtime::Error> {
++    let id = runtime::load_program(bytecode, None).unwrap();
++    let result = run_program(id, regs, is_return);
++    runtime::unload_program(id).unwrap();
++    result
++}
++
++#[test]
++fn full_ptregs_round_trip_and_metadata() {
++    let input = registers();
++    for is_return in [false, true] {
++        let ctx = build_context(&input, is_return);
++        assert_eq!(ctx.probe_type, if is_return { 1 } else { 0 });
++        assert_eq!((ctx.tracepoint_id, ctx.vm_id, ctx.vcpu_id), (0, 0, 0));
++        assert_eq!(ctx.regs_valid, 7);
++        assert_eq!(ctx.arg0, input.regs[0]);
++        assert_eq!(ctx.arg1, if is_return { 0 } else { input.regs[1] });
++        let mut output = registers();
++        output.regs.fill(0);
++        output.sp = 0;
++        output.pc = 0;
++        output.pstate = 0;
++        output.orig_x0 = 0;
++        output.syscallno = 0;
++        output.unused2 = 0;
++        write_back_registers(&ctx, &mut output);
++        assert_eq!(output.regs, input.regs);
++        assert_eq!(
++            (output.sp, output.pc, output.pstate),
++            (input.sp, input.pc, input.pstate)
++        );
++        assert_eq!(
++            (output.orig_x0, output.syscallno, output.unused2),
++            (input.orig_x0, input.syscallno, input.unused2)
++        );
++    }
++}
++
++#[test]
++fn ebpf_reads_same_x0_for_entry_return_and_guest_contexts() {
++    let code = [insn(0x79, 0x10, 56, 0), insn(0x95, 0, 0, 0)].concat();
++    for is_return in [false, true] {
++        let mut regs = registers();
++        assert_eq!(execute(&code, &mut regs, is_return).unwrap(), 0x1000);
++    }
++    #[cfg(feature = "guest-kprobe")]
++    {
++        let mut ctx = axebpf::probe::kprobe::handler::build_guest_ctx_for_test(
++            1,
++            false,
++            0,
++            0,
++            &registers().regs,
++        );
++        let program = runtime::EbpfProgram::new(&code, None).unwrap();
++        assert_eq!(
++            program.execute_with_context(ctx.as_bytes_mut()).unwrap(),
++            0x1000
++        );
++    }
++}
++
++#[test]
++fn ebpf_writes_registers_but_metadata_and_argument_aliases_do_not_control_writeback() {
++    let mut code = Vec::new();
++    for (offset, value) in [
++        (56, 11),
++        (296, 30),
++        (304, 31),
++        (312, 32),
++        (320, 33),
++        (328, 34),
++    ] {
++        code.extend_from_slice(&insn(0x7a, 1, offset, value));
++    }
++    code.extend_from_slice(&insn(0x62, 1, 336, -2));
++    code.extend_from_slice(&insn(0x62, 1, 340, 35));
++    code.extend_from_slice(&insn(0x7a, 1, 24, 999)); // arg0 is not an x0 write alias
++    code.extend_from_slice(&insn(0x7a, 1, 344, 0)); // validity is not a write mask
++    code.extend_from_slice(&insn(0xb7, 0, 0, 0));
++    code.extend_from_slice(&insn(0x95, 0, 0, 0));
++    let mut regs = registers();
++    execute(&code, &mut regs, true).unwrap();
++    assert_eq!(regs.regs[0], 11);
++    assert_eq!(regs.regs[30], 30);
++    assert_eq!(regs.regs[1], 0x1001);
++    assert_eq!((regs.sp, regs.pc, regs.pstate), (31, 32, 33));
++    assert_eq!((regs.orig_x0, regs.syscallno, regs.unused2), (34, -2, 35));
++}
++
++#[test]
++fn stores_before_runtime_error_are_written_back() {
++    let code = [
++        insn(0x7a, 1, 56, 42),
++        insn(0x79, 0x10, 4096, 0), // outside context: fail after the store
++        insn(0x95, 0, 0, 0),
++    ]
++    .concat();
++    let mut regs = registers();
++    assert!(execute(&code, &mut regs, false).is_err());
++    assert_eq!(regs.regs[0], 42);
++    assert_eq!(regs.pc, 0x3000);
++}
+diff --git a/tests/trace_context_tests.rs b/tests/trace_context_tests.rs
+new file mode 100644
+index 0000000..839dcfb
+--- /dev/null
++++ b/tests/trace_context_tests.rs
+@@ -0,0 +1,117 @@
++#![cfg(feature = "runtime")]
++
++use axebpf::TraceContext;
++use axebpf::context::{REGS_VALID_X0_X7, REGS_VALID_X8_X30};
++use axebpf::runtime::EbpfProgram;
++
++fn read_u64_program(offset: i16) -> EbpfProgram {
++    read_program(0x79, offset)
++}
++
++fn read_u32_program(offset: i16) -> EbpfProgram {
++    read_program(0x61, offset)
++}
++
++fn read_program(opcode: u8, offset: i16) -> EbpfProgram {
++    let [lo, hi] = offset.to_le_bytes();
++    EbpfProgram::new(
++        &[
++            opcode, 0x10, lo, hi, 0, 0, 0, 0, // load u32/u64 at r1 + offset
++            0x95, 0, 0, 0, 0, 0, 0, 0, // exit
++        ],
++        None,
++    )
++    .unwrap()
++}
++
++#[test]
++fn reordered_header_and_register_offsets_are_visible_to_ebpf() {
++    let regs = core::array::from_fn(|i| 0x1000 + i as u64);
++    let mut ctx = TraceContext::new(17)
++        .with_vm(3, 5)
++        .with_probe_type(2)
++        .with_args(77, 0, 0, 0)
++        .with_aarch64_gprs(&regs);
++    ctx.timestamp_ns = 0x1122_3344_5566_7788;
++    // Hard-coded ABI offsets deliberately independent of the Rust field offsets.
++    for (offset, expected) in [
++        (0, ctx.timestamp_ns),
++        (24, 77),
++        (56, regs[0]),
++        (112, regs[7]),
++        (120, regs[8]),
++        (296, regs[30]),
++    ] {
++        assert_eq!(
++            read_u64_program(offset)
++                .execute_with_context(ctx.as_bytes_mut())
++                .unwrap(),
++            expected,
++        );
++    }
++    for (offset, expected) in [(8, 17), (12, 3), (16, 5), (20, 2)] {
++        assert_eq!(
++            read_u32_program(offset)
++                .execute_with_context(ctx.as_bytes_mut())
++                .unwrap(),
++            expected,
++        );
++    }
++    assert_eq!(ctx.regs_valid, REGS_VALID_X0_X7 | REGS_VALID_X8_X30);
++    assert_eq!(ctx.sp, 0);
++    assert_eq!(ctx.pc, 0);
++}
++
++#[test]
++fn tracepoint_has_correct_input_type_and_no_register_snapshot() {
++    let mut ctx = TraceContext::for_tracepoint(17, 1234, 5678);
++    assert_eq!(ctx.tracepoint_id, 17);
++    assert_eq!(ctx.timestamp_ns, 1234);
++    assert_eq!(ctx.arg0, 5678);
++    assert_eq!(
++        read_u32_program(20)
++            .execute_with_context(ctx.as_bytes_mut())
++            .unwrap(),
++        4
++    );
++    assert_eq!(
++        read_u64_program(344)
++            .execute_with_context(ctx.as_bytes_mut())
++            .unwrap(),
++        0
++    );
++    assert_eq!(&ctx.as_bytes()[56..], &[0; 296]);
++}
++
++#[test]
++fn padding_free_byte_access_accepts_all_bit_patterns() {
++    let mut ctx = TraceContext::default();
++    assert_eq!(ctx.as_bytes(), &[0; 352]);
++    ctx.as_bytes_mut().fill(0xff);
++    assert_eq!(ctx.timestamp_ns, u64::MAX);
++    assert_eq!(ctx.tracepoint_id, u32::MAX);
++    assert_eq!(ctx.syscallno, -1);
++    assert_eq!(ctx.regs_x8_x30, [u64::MAX; 23]);
++    assert_eq!(ctx.regs_valid, u64::MAX);
++}
++
++#[cfg(all(feature = "guest-kprobe", feature = "guest-uprobe"))]
++#[test]
++fn guest_probes_share_register_offsets_without_changing_argument_semantics() {
++    use axebpf::probe::{kprobe, uprobe};
++
++    let regs = core::array::from_fn(|i| 0x2000 + i as u64);
++    let mut kernel = kprobe::handler::build_guest_ctx_for_test(3, false, 0xabcd, 0xef00, &regs);
++    let mut user = uprobe::handler::build_uprobe_ctx_for_test(3, 0, 42, 43, 0x1000, false)
++        .with_aarch64_gprs(&regs);
++    let program = read_u64_program(296); // x30, in the extended register region
++    for ctx in [&mut kernel, &mut user] {
++        assert_eq!(
++            program.execute_with_context(ctx.as_bytes_mut()).unwrap(),
++            regs[30]
++        );
++        assert_eq!(ctx.regs_valid, REGS_VALID_X0_X7 | REGS_VALID_X8_X30);
++    }
++    assert_eq!(kernel.arg0, 0xabcd); // guest address
++    assert_eq!(user.arg0, 42); // PID, not x0
++}

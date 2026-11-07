@@ -1,0 +1,19 @@
+[base]
+id = 1
+name = "linux-qemu-axtrace"
+vm_type = 1
+cpu_num = 1
+cpu_ids = [1]
+
+[kernel]
+image_location = "fs"
+kernel_path = "/vmimages/linux-qemu-aarch64.bin"
+cmdline = "root=/dev/vda rw init=/sbin/init nokaslr"
+memory_regions = [[0x8000_0000, 0x1000_0000, 0x7, 1]]
+
+[devices]
+passthrough_devices = [["/"]]
+passthrough_addresses = []
+excluded_devices = []
+emu_devices = []
+interrupt_mode = "passthrough"
